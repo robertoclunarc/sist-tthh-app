@@ -1,0 +1,6 @@
+/dist
+/tmp
+/build
+
+# dependencies
+/node_modules
