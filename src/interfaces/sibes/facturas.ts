@@ -35,3 +35,9 @@ export interface IFacturaDetallada
     factura ?: Ifactura,
     detalles ?: IdetallesFactura[],
 }
+
+export interface IFacturaBebeficiario{
+    idfacturabenf?: number,
+    fkfactura?: number,
+    fkbeneficiario?:number,
+}

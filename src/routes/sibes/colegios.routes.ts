@@ -10,10 +10,10 @@ class ColegiosRoutes {
 
     config(): void{
         
-        this.router.get('/consultar/:id/:nombre/:rif/:localidad/:tipo/:condlogica', colegioController.colegiofilter);         
-        this.router.put('/update/:IdReg', colegioController.updateRecord);         
-        this.router.delete('/delete/:IdReg', colegioController.deleteRecord);        
-        this.router.post('/insert', colegioController.createRecord);        
+        this.router.get('/consultar/:id/:nombre/:rif/:localidad/:tipo/:condlogica', colegioController.colegiofilter);
+        this.router.put('/update/:IdReg', colegioController.updateRecord);
+        this.router.delete('/delete/:IdReg', colegioController.deleteRecord);
+        this.router.post('/insert', colegioController.createRecord);
     }
 }
 

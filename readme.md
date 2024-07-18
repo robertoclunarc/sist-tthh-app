@@ -1,24 +1,138 @@
 # Script en nodejs, typescript para los insert, update, delete y consultas de registros de la BD bdmatrrhh.
 
-## Rutas
+## Rutas: 
+### /sist_tthh/api/sibes/login
+- post('/login/', loginController.logear);        
+- get('/usuarios/filtrados/:trabajador', loginController.usuariosFiltrados);
 
-- post('/sist_tthh/api/sibes/login/', loginController.logear);        
-- get('/sist_tthh/api/sibes/login/usuarios/filtrados/:trabajador', loginController.usuariosFiltrados);
+### /sist_tthh/api/sibes/menus
+- get('/consultar', menuController.menusAll);
+- get('/consultar/:user', menuController.menusUsuario);
 
-- get('/sist_tthh/api/sibes/menus/consultar', menuController.menusAll);
-- get('/sist_tthh/api/sibes/menus/consultar/:user', menuController.menusUsuario);
+### /sist_tthh/api/sibes/correo
+- post('/send/memory',envioCorreo.sendFromMemory);
+- post('/send/path',envioCorreo.sendFromPath);
+- get('/remitentes/:actividad',envioCorreo.remitentes);
 
-- post('/sist_tthh/api/sibes/correo/send/memory',envioCorreo.sendFromMemory);
-- post('/sist_tthh/api/sibes/correo/send/path',envioCorreo.sendFromPath);
-- get('/sist_tthh/api/sibes/correo/remitentes/:actividad',envioCorreo.remitentes);
+### /sist_tthh/api/sibes/varios
+- get('/prueba/', varController.prueba);       
+- get('/generar/serie/:inicio/:fin/:interval/:formato', varController.generateSeries);
 
-- get('/sist_tthh/api/sibes/varios/prueba/', varController.prueba);       
-- get('/sist_tthh/api/sibes/varios/generar/serie/:inicio/:fin/:interval/:formato', varController.generateSeries);
+### /sist_tthh/api/trabajadores
+- get('/consultar', trabajadoresController.trabajadoresAll); 
+- get('/consultar/cedula/:IdReg', trabajadoresController.trabajadorCedula);
+- get('/subordinados/supervisor/:login', trabajadoresController.trabajadoresPorSigladoSupervisor);
 
-- get('/sist_tthh/api/trabajadores/consultar', trabajadoresController.trabajadoresAll); 
-- get('/sist_tthh/api/trabajadores/consultar/cedula/:IdReg', trabajadoresController.trabajadorCedula);
-- get('/sist_tthh/api/trabajadores/subordinados/supervisor/:login', trabajadoresController.trabajadoresPorSigladoSupervisor);
-
+### /sist_tthh/api/facturas
+- get('/consultar/detalle/:iddetfactura/:fkfactura', facturaController.detFacturaFilter);         
+- get('/filtrar/:idfactura/:nroFactura/:fechaFacturaIni/:fechaFacturaFin/:idColegio/:trabajador/:fechaEntregaIni/:fechaEntregaFin/:condlogica', facturaController.facturafilter);        
+- put('/update/:IdReg', facturaController.updateRecordFactura); 
+- put('/update/detalle/:IdReg', facturaController.updateRecordDetFactura);        
+- delete('/delete/:IdReg', facturaController.deleteRecordFactura);
+- delete('/delete/detalle/:IdReg', facturaController.deleteRecordDetFactura);
+- post('/insert', facturaController.createRecordFactura)
+```
+{
+    "idfactura" : number,
+    "nro_factura" : "string",
+    "trabajador" : number,
+    "fecha_factura" : "string",
+    "monto_total" : "string",
+    "subtotal" : "string",
+    "iva" : "string",
+    "fkcolegio" : number,
+    "login_registro" : "string",
+    "fecha_registro" : "string",
+    "fecha_modificacio"n : "string",
+    "login_modificacion" : "string",
+    "tasa_cambio" : "string",
+    "fecha_entrega_rrhh" : "string",
+}
+```
+- post('/insert/detalle', facturaController.createRecordDetFactura)
+```
+{
+    "iddetfactura"  : number,
+    "fkfactura"  : number,
+    "fkbeneficiario" : number,
+    "fkmensualidad"  : number,
+    "mes" : number,
+    "monto" : "string",
+    "corresponde" : "string",
+    "fecha_modificacion" : "string",
+    "login_modificacion" : "string",
+    "tasa_cambio" : "string",    
+}
+```
+- post('/insert/beneficiario', facturaController.createRecordFacturaBeneficiario)
+```
+{
+    "idfacturabenf": number,
+    "fkfactura": number,
+    "fkbeneficiario":number,
+}
+```
+### /sist_tthh/api/colegios
+- get('/consultar/:id/:nombre/:rif/:localidad/:tipo/:condlogica', colegioController.colegiofilter);
+- put('/update/:IdReg', colegioController.updateRecord);
+- delete('/delete/:IdReg', colegioController.deleteRecord);
+- post('/insert', colegioController.createRecord)
+```
+{
+    "idcolegio" : number,
+    "rif_colegio" : "string",
+    "nombre_colegio" : "string",
+    "estatus_colegio" : "string",
+    "direccion_colegio" : "string",
+    "localidada_colegio" : "string",
+    "provincia" ?: "string",
+    "tipo_administracion" : "string",    
+} 
+```
+### /sist_tthh/api/beneficiarios
+- get('/consultar/:id/:nombre/:cedula/:trabajador/:sexo/:grado/:nivelEduc/:edadIni/:edadFin/:condlogica', beneficiariosController.beneficiariofilter);
+- put('/update/:IdReg', beneficiariosController.updateRecord);
+- delete('/delete/:IdReg', beneficiariosController.deleteRecord);
+- post('/insert', beneficiariosController.createRecord)
+```
+{
+    "idbeneficiario" : number,
+    "cedula" : "string",
+    "trabajador" : "string",
+    "fecha_nac" : "string",
+    "sexo_beneficiario" : "string",    
+    "pago_colegio" : boolean,
+    "estatus_beneficio" : "string",
+    "nombre_beneficiario" : "string",
+    "grado_escolarizacion" : "string",
+    "nivel_educativo" : "string",
+} 
+```
+### /sist_tthh/api/inscripciones
+- get('/consultar/:id/:fkbeneficiario/:fkcolegio/:anio_escolar', inscripcionsController.inscripcionfilter);
+- put('/update/:IdReg', inscripcionsController.updateRecord);
+- delete('/delete/:IdReg', inscripcionsController.deleteRecord);
+- post('/insert', inscripcionsController.createRecord)
+```
+{
+    "idinscripcion": number,
+    "fkbeneficiario": number,
+    "fkcolegio": number,
+    "fecha_inscripcion": "string",
+    "anio_escolar": "string",
+    "monto_inscripcion": "string",
+    "monto_mensual": "string",
+    "login_registro": "string",
+    "fecha_registro": "string",
+    "estatus_inscripcioin": "string",
+    "mes_inicio": number,
+    "fecha_modificacion": "string",
+    "login_modificacion": "string",
+    "tasa_cambio": "string",
+    "grado_escolarizacion": "string",
+    "nivel_educativo": "string",
+}
+```
 ### Informe de implementación de aplicación web en Docker
 
 Introducción

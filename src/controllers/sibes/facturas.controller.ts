@@ -1,7 +1,7 @@
 import { Request,  Response  } from 'express';
-import db from '../database';
+import db from '../../database';
 //import {QueryResult} from 'pg';
-import { Ifactura, IdetallesFactura, IFacturaDetallada } from '../interfaces/sibes/facturas';
+import { Ifactura, IdetallesFactura, IFacturaDetallada } from '../../interfaces/sibes/facturas';
 
 class FacturasController{   
 
@@ -233,6 +233,49 @@ class FacturasController{
             //console.log(query);
             if (!result){
                 res.status(200).json('Factura no registrada');
+                //res.status(200).json(query);
+            }
+            else{
+                    
+                res.status(200).json(result[0]);                    
+                //res.status(200).json(query);  
+            }
+            
+        } catch (e) {
+            console.error(e);
+            res.status(500).json('Internal Server error');
+        }
+        
+    }
+
+    public async createRecordFacturaBeneficiario (req: Request, res: Response): Promise<void> {
+        let newPost: any = req.body;
+        
+        let query : string = "INSERT INTO sibes_facturas_beneficiarios (";
+        try { 
+            
+            for (const prop in newPost) {
+                if (prop != 'idfacturabenf')                    
+                     query+= `${prop},`;                                   
+            }
+            query =query.substring(0, query.length - 1);
+            query+= " ) VALUES ("; 
+
+            for (const prop in newPost) {
+                if (prop != 'idfacturabenf')
+                    if (typeof newPost[prop] === 'string')
+                        query+= `'${newPost[prop]}',`;
+                    else
+                        query+= `${newPost[prop]},`;               
+            }
+
+            query =query.substring(0, query.length - 1);
+            query += ') RETURNING *';
+            
+            const result: Ifactura[] = await db.querySelect(query);
+            //console.log(query);
+            if (!result){
+                res.status(200).json('Factura_beneficiario no registrada');
                 //res.status(200).json(query);
             }
             else{

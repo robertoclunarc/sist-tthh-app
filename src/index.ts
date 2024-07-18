@@ -1,16 +1,17 @@
 import express, { Application} from 'express';
+import morgan from 'morgan';
+import cors from 'cors';
+import db from './database';
 import indexRoutes from './routes/index.routes';
 import variosRoutes from './routes/sibes/varios.routes';
 import logInRoutes from './routes/sibes/login.routes';
 import facturasRoutes from './routes/sibes/facturas.routes';
 import colegiosRoutes from './routes/sibes/colegios.routes';
 import beneficiariosRoutes from "./routes/sibes/beneficiarios.routes";
+import inscripcionesRoutes from 'routes/sibes/inscripciones.routes';
 import menusRoutes from './routes/sibes/menus.routes';
 import correosRoutes  from "./routes/sibes/correos.routes";
 import trabajadoresRoutes from './routes/trabajadores.routes';
-import morgan from 'morgan';
-import cors from 'cors';
-import db from './database';
 
 class Server {
     public app: Application;
@@ -37,6 +38,7 @@ class Server {
         this.app.use('/sist_tthh/api/facturas',facturasRoutes);
         this.app.use('/sist_tthh/api/colegios',colegiosRoutes);
         this.app.use('/sist_tthh/api/beneficiarios',beneficiariosRoutes);
+        this.app.use('/sist_tthh/api/inscripciones',inscripcionesRoutes);
         this.app.use('/sist_tthh/api/trabajadores',trabajadoresRoutes);
     }
 

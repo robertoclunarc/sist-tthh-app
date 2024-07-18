@@ -10,10 +10,10 @@ class BeneficiariosRoutes {
 
     config(): void{
         
-        this.router.get('/consultar/:id/:nombre/:cedula/:trabajador/:sexo/:grado/:nivelEduc/:edadIni/:edadFin/:condlogica', beneficiariosController.beneficiariofilter);         
-        this.router.put('/update/:IdReg', beneficiariosController.updateRecord);         
-        this.router.delete('/delete/:IdReg', beneficiariosController.deleteRecord);        
-        this.router.post('/insert', beneficiariosController.createRecord);        
+        this.router.get('/consultar/:id/:nombre/:cedula/:trabajador/:sexo/:grado/:nivelEduc/:edadIni/:edadFin/:condlogica', beneficiariosController.beneficiariofilter);
+        this.router.put('/update/:IdReg', beneficiariosController.updateRecord);
+        this.router.delete('/delete/:IdReg', beneficiariosController.deleteRecord);
+        this.router.post('/insert', beneficiariosController.createRecord);
     }
 }
 
