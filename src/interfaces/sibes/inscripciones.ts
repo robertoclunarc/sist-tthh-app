@@ -14,4 +14,6 @@ export interface Iinscripcion
     fecha_modificacion ?: string,
     login_modificacion ?: string,
     tasa_cambio ?: string,
+    grado_escolarizacion ?: string,
+    nivel_educativo ?: string,
 }

@@ -1,52 +1,23 @@
 # Script en nodejs, typescript para los insert, update, delete y consultas de registros de la BD bdmatrrhh.
 
-## Tablas:
+## Rutas
 
-- tbl_consulta
-- tbl_pacientes
-- tbl_motivos
-- tbl_areas
-- tbl_patologias
-- tbl_medicos
-- tbl_remitido
-- tbl_reposo
-- tbl_paramedicos
-- tbl_datos_antropometricos
-- tbl_signos_vitales
-- usuarios
-- tbl_medicamentos_consulta
-- tbl_medicamentos
+- post('/sist_tthh/api/sibes/login/', loginController.logear);        
+- get('/sist_tthh/api/sibes/login/usuarios/filtrados/:trabajador', loginController.usuariosFiltrados);
 
-~~## Variables de entorno:~~
+- get('/sist_tthh/api/sibes/menus/consultar', menuController.menusAll);
+- get('/sist_tthh/api/sibes/menus/consultar/:user', menuController.menusUsuario);
 
-~~APP_PORT~~
-~~JWT_SECRET~~
-~~MYSQL_SERVER~~
-~~MYSQL_USER~~
-~~MYSQL_PW~~
-~~MYSQL_DB~~
-~~MYSQL_PORT~~
+- post('/sist_tthh/api/sibes/correo/send/memory',envioCorreo.sendFromMemory);
+- post('/sist_tthh/api/sibes/correo/send/path',envioCorreo.sendFromPath);
+- get('/sist_tthh/api/sibes/correo/remitentes/:actividad',envioCorreo.remitentes);
 
+- get('/sist_tthh/api/sibes/varios/prueba/', varController.prueba);       
+- get('/sist_tthh/api/sibes/varios/generar/serie/:inicio/:fin/:interval/:formato', varController.generateSeries);
 
-~~## TOKEN~~
-
-~~Para acceder a cualquiera de las rutas especificadas se requiere crear el token, para esto se debe ir a la siguiente ruta y pasar como parametro el usuario~~
-
-~~get "/token/:login"~~
-
-## Consultas
-
-- get('/sist_epidemiologico/api/consultas/consultar', consultaController.consultasAll); 
-- get('/sist_epidemiologico/api/consultas/consultar/:IdReg', consultaController.consultasOne); 
-- get('/sist_epidemiologico/api/consultas/filtrar/:uidPaciente/:uidConsulta/:fechaIni/:fechaFin/:ciMedico/:ciParamedico/:uidMotivo', consultaController.consultafilter); 
-- put('/sist_epidemiologico/api/consultas/update/:IdReg', consultaController.updateRecord);        
-- delete('/sist_epidemiologico/api/consultas/delete/:IdReg', consultaController.deleteRecord);
-- post('/sist_epidemiologico/api/consultas/insert',consultaController.createRecord);
-
-## Login
-
-- post('/sist_epidemiologico/api/login', loginController.logear); 
-
+- get('/sist_tthh/api/trabajadores/consultar', trabajadoresController.trabajadoresAll); 
+- get('/sist_tthh/api/trabajadores/consultar/cedula/:IdReg', trabajadoresController.trabajadorCedula);
+- get('/sist_tthh/api/trabajadores/subordinados/supervisor/:login', trabajadoresController.trabajadoresPorSigladoSupervisor);
 
 ### Informe de implementación de aplicación web en Docker
 

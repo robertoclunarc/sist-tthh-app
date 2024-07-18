@@ -2,7 +2,9 @@ import express, { Application} from 'express';
 import indexRoutes from './routes/index.routes';
 import variosRoutes from './routes/sibes/varios.routes';
 import logInRoutes from './routes/sibes/login.routes';
-import consultasRoutes from './routes/consultas.routes';
+import facturasRoutes from './routes/sibes/facturas.routes';
+import colegiosRoutes from './routes/sibes/colegios.routes';
+import beneficiariosRoutes from "./routes/sibes/beneficiarios.routes";
 import menusRoutes from './routes/sibes/menus.routes';
 import correosRoutes  from "./routes/sibes/correos.routes";
 import trabajadoresRoutes from './routes/trabajadores.routes';
@@ -29,10 +31,12 @@ class Server {
     routes(): void{
         this.app.use(indexRoutes);
         this.app.use('/sist_tthh/api/sibes/varios',variosRoutes);
-        this.app.use('/sist_tthh/api/sibes/login', logInRoutes);                
-        this.app.use('/sist_tthh/api/sibes/menus',menusRoutes);       
+        this.app.use('/sist_tthh/api/sibes/login', logInRoutes);
+        this.app.use('/sist_tthh/api/sibes/menus',menusRoutes);
         this.app.use('/sist_tthh/api/sibes/correo',correosRoutes);
-        this.app.use('/sist_tthh/api/consultas',consultasRoutes);       
+        this.app.use('/sist_tthh/api/facturas',facturasRoutes);
+        this.app.use('/sist_tthh/api/colegios',colegiosRoutes);
+        this.app.use('/sist_tthh/api/beneficiarios',beneficiariosRoutes);
         this.app.use('/sist_tthh/api/trabajadores',trabajadoresRoutes);
     }
 
