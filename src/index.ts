@@ -12,6 +12,7 @@ import inscripcionesRoutes from 'routes/sibes/inscripciones.routes';
 import menusRoutes from './routes/sibes/menus.routes';
 import correosRoutes  from "./routes/sibes/correos.routes";
 import trabajadoresRoutes from './routes/trabajadores.routes';
+import mensualidadesRoutes from 'routes/sibes/mensualidades.routes';
 
 class Server {
     public app: Application;
@@ -35,11 +36,12 @@ class Server {
         this.app.use('/sist_tthh/api/sibes/login', logInRoutes);
         this.app.use('/sist_tthh/api/sibes/menus',menusRoutes);
         this.app.use('/sist_tthh/api/sibes/correo',correosRoutes);
+        this.app.use('/sist_tthh/api/trabajadores',trabajadoresRoutes);
         this.app.use('/sist_tthh/api/facturas',facturasRoutes);
         this.app.use('/sist_tthh/api/colegios',colegiosRoutes);
         this.app.use('/sist_tthh/api/beneficiarios',beneficiariosRoutes);
         this.app.use('/sist_tthh/api/inscripciones',inscripcionesRoutes);
-        this.app.use('/sist_tthh/api/trabajadores',trabajadoresRoutes);
+        this.app.use('/sist_tthh/api/mensualidades',mensualidadesRoutes);
     }
 
     start(): void{

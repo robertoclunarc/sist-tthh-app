@@ -133,6 +133,41 @@
     "nivel_educativo": "string",
 }
 ```
+### /sist_tthh/api/mensualidades
+- get('/consultar/:id/:fkinscripcion', mensualidadsController.mensualidadfilter);
+- put('/update/:IdReg', mensualidadsController.updateRecord);
+- delete('/delete/:IdReg', mensualidadsController.deleteRecord);
+- post('/insert', mensualidadsController.createRecord);
+```
+{
+    "idmensualidad" : number,
+    "fkinscripcion" : number,
+    "monto_inscripcion" : "string",    
+    "mes_01" : "string",
+    "mes_02" : "string",
+    "mes_03" : "string",
+    "mes_04" : "string",
+    "mes_05" : "string",
+    "mes_06" : "string",
+    "mes_07" : "string",
+    "mes_08" : "string",
+    "mes_09" : "string",
+    "mes_10" : "string",
+    "mes_11" : "string",
+    "mes_12" : "string",
+    "deuda" : "string",
+    "pagado" : "string",
+    "ultimo_mes_pagado" : number,
+    "monto_ultimo_mes" : "string",
+    "fecha_ult_pago" : "string",
+    "pago_prox" : "string",
+    "estatus" : "string",
+    "fecha_modificacion" : "string",
+    "login_modificacion" : "string",
+    "tasa_cambio" : "string",
+}
+```
+
 ### Informe de implementación de aplicación web en Docker
 
 Introducción
