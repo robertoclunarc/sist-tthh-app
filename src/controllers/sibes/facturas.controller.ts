@@ -26,16 +26,26 @@ class FacturasController{
 
         let where: string[] = [];
         let orderBy: string[] = [];
-        if (filtro.idfactura !==null || filtro.nroFactura!==null || filtro.fechaFacturaIni!==null || filtro.fechaFacturaFin!==null || filtro.idColegio!==null || filtro.trabajador!==null || filtro.fechaEntregaIni!==null || filtro.fechaEntregaFin!==null || filtro.estatus != null){
+        if (filtro.idfactura !==null || filtro.nroFactura!==null || filtro.fechaFacturaIni!==null || filtro.fechaFacturaFin!==null || filtro.idColegio!==null || filtro.trabajador!==null || filtro.fechaEntregaIni!==null || filtro.fechaEntregaFin!==null || filtro.estatus != null  || filtro.periodo != null){
+            if (filtro.idfactura !==null){
+                where.push( ` f.idfactura=${filtro.idfactura}`);
+                orderBy.push('f.idfactura');
+            }
+
+            if (filtro.nroFactura !==null){
+                where.push( ` f.nro_factura like '%${filtro.nroFactura}%' `);
+                orderBy.push('f.nro_factura');
+            }
+
             if (filtro.trabajador !==null &&  regex.test(filtro.trabajador)){
                 where.push( ` f.trabajador like '%${filtro.trabajador}%' `);
                 orderBy.push('f.trabajador');
-            }
+            }            
 
-            if (filtro.idColegio !==null &&  regex.test(filtro.idColegio)){
-                where.push( ` CAST(f.fkcolegio AS TEXT) LIKE '%${filtro.idColegio}%' `);
+            if (filtro.idColegio !==null){
+                where.push( ` f.fkcolegio=${filtro.idColegio}`);
                 orderBy.push('f.fkcolegio');
-            }
+            }            
 
             if (filtro.fechaFacturaIni !==null && filtro.fechaFacturaFin!=null){
                 where.push( ` (to_char(f.fecha_factura,'YYYY-MM-DD') BETWEEN '${filtro.fechaFacturaIni}' AND '${filtro.fechaFacturaFin}') `);
@@ -59,7 +69,7 @@ class FacturasController{
             
             where.forEach(function(w, index) {
                 if (index==0){
-                     consulta += ` WHERE (${w}`;
+                     consulta += ` WHERE ${w}`;
                 }else{                    
                     consulta += ` ${filtro.condlogica} ${w}`;
                 }    
@@ -77,7 +87,7 @@ class FacturasController{
         }else{
             consulta += " ORDER BY f.idfactura desc";
         }
-        
+        console.log(consulta);
         try {
             const facturasResult = await db.querySelect(consulta);
             const idfacturas = facturasResult.map((factura: any) => factura.idfactura);
