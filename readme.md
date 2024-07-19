@@ -25,7 +25,7 @@
 
 ### /sist_tthh/api/facturas
 - get('/consultar/detalle/:iddetfactura/:fkfactura', facturaController.detFacturaFilter);         
-- get('/filtrar/:idfactura/:nroFactura/:fechaFacturaIni/:fechaFacturaFin/:idColegio/:trabajador/:fechaEntregaIni/:fechaEntregaFin/:condlogica', facturaController.facturafilter);        
+- get('/filtrar/:idfactura/:nroFactura/:fechaFacturaIni/:fechaFacturaFin/:idColegio/:trabajador/:fechaEntregaIni/:fechaEntregaFin/:estatus/:periodo/:condlogica', facturaController.facturafilter);        
 - put('/update/:IdReg', facturaController.updateRecordFactura); 
 - put('/update/detalle/:IdReg', facturaController.updateRecordDetFactura);        
 - delete('/delete/:IdReg', facturaController.deleteRecordFactura);
@@ -35,7 +35,7 @@
 {
     "idfactura" : number,
     "nro_factura" : "string",
-    "trabajador" : number,
+    "trabajador" : "string",
     "fecha_factura" : "string",
     "monto_total" : "string",
     "subtotal" : "string",
@@ -47,6 +47,8 @@
     "login_modificacion" : "string",
     "tasa_cambio" : "string",
     "fecha_entrega_rrhh" : "string",
+    "estatus" : "string", 
+    "periodopago" : "string"
 }
 ```
 - post('/insert/detalle', facturaController.createRecordDetFactura)
@@ -85,8 +87,8 @@
     "estatus_colegio" : "string",
     "direccion_colegio" : "string",
     "localidada_colegio" : "string",
-    "provincia" ?: "string",
-    "tipo_administracion" : "string",    
+    "provincia" : "string",
+    "tipo_administracion" : "string"
 } 
 ```
 ### /sist_tthh/api/beneficiarios
@@ -105,7 +107,7 @@
     "estatus_beneficio" : "string",
     "nombre_beneficiario" : "string",
     "grado_escolarizacion" : "string",
-    "nivel_educativo" : "string",
+    "nivel_educativo" : "string"
 } 
 ```
 ### /sist_tthh/api/inscripciones

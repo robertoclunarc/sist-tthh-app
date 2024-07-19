@@ -6,19 +6,7 @@ import { Ifactura, IdetallesFactura, IFacturaDetallada } from '../../interfaces/
 class FacturasController{   
 
     public async facturafilter (req: Request, res: Response): Promise<void> {
-        let consulta = "SELECT f.*, array_agg( \
-        json_build_object( \
-            'iddetfactura:', d.iddetfactura, \
-            'fkmensualidad:', d.fkmensualidad, \
-            'mes:', d.mes, \
-            'monto:', d.monto, \
-            'corresponde:', d.corresponde, \
-            'fecha_modificacion:', d.fecha_modificacion, \
-            'login_modificacion:', d.login_modificacion, \
-            'tasa_cambio:', d.tasa_cambio, \
-            'fkbeneficiario:', d.fkbeneficiario \
-        ) \
-        ) AS detalles FROM sibes_facturas f LEFT JOIN sibes_detfacturas d on f.idfactura = d.fkfactura ";
+        let consulta = "SELECT f.* FROM sibes_facturas f ";
         const valueIsNull = [undefined, 'null', 'NULL', '', , 'undefined'];
         const regex = /^[0-9]*$/;
         const IdReg: string = req.params.IdReg
@@ -31,13 +19,14 @@ class FacturasController{
             trabajador: valueIsNull.indexOf(req.params.trabajador)  != -1 ? null : req.params.trabajador,            
             fechaEntregaIni: valueIsNull.indexOf(req.params.fechaEntregaIni)  != -1 ? null : req.params.fechaEntregaIni,
             fechaEntregaFin: valueIsNull.indexOf(req.params.fechaEntregaFin)  != -1 ? null : req.params.fechaEntregaFin,
+            estatus: valueIsNull.indexOf(req.params.estatus)  != -1 ? null : req.params.estatus,
+            periodo: valueIsNull.indexOf(req.params.periodo)  != -1 ? null : req.params.periodo,
             condlogica: valueIsNull.indexOf(req.params.condlogica)  >= 0 ? 'OR' : req.params.condlogica,
-        }
-        
+        }        
 
         let where: string[] = [];
         let orderBy: string[] = [];
-        if (filtro.idfactura !==null || filtro.nroFactura!==null || filtro.fechaFacturaIni!==null || filtro.fechaFacturaFin!==null || filtro.idColegio!==null || filtro.trabajador!==null || filtro.fechaEntregaIni!==null || filtro.fechaEntregaFin!==null){
+        if (filtro.idfactura !==null || filtro.nroFactura!==null || filtro.fechaFacturaIni!==null || filtro.fechaFacturaFin!==null || filtro.idColegio!==null || filtro.trabajador!==null || filtro.fechaEntregaIni!==null || filtro.fechaEntregaFin!==null || filtro.estatus != null){
             if (filtro.trabajador !==null &&  regex.test(filtro.trabajador)){
                 where.push( ` f.trabajador like '%${filtro.trabajador}%' `);
                 orderBy.push('f.trabajador');
@@ -57,6 +46,16 @@ class FacturasController{
                 where.push( ` (to_char(f.fecha_entrega_rrhh,'YYYY-MM-DD') BETWEEN '${filtro.fechaEntregaIni}' AND '${filtro.fechaEntregaFin}') `);
                 orderBy.push('f.fecha_entrega_rrhh desc');
             }
+
+            if (filtro.estatus !==null){
+                where.push( ` f.estatus like '%${filtro.estatus}%' `);
+                orderBy.push('f.estatus');
+            }
+
+            if (filtro.periodo !==null){
+                where.push( ` f.periodopago like '%${filtro.periodo}%' `);
+                orderBy.push('f.periodopago');
+            }
             
             where.forEach(function(w, index) {
                 if (index==0){
@@ -67,72 +66,61 @@ class FacturasController{
             }); 
         }
 
-        consulta += " GROUP BY \
-            f.idfactura, \
-            f.nro_factura, \
-            f.fecha_factura, \
-            f.monto_total, \
-            f.subtotal, \
-            f.iva, \
-            f.fkcolegio, \
-            f.login_registro, \
-            f.fecha_registro, \
-            f.fecha_modificacion, \
-            f.login_modificacion, \
-            f.tasa_cambio, \
-            f.fecha_entrega_rrhh, \
-            f.trabajador ";
-
         if (orderBy.length>0){
             orderBy.forEach(function(order, index) {
                 if (index==0){
                     consulta += ` ORDER BY ${order}`; 
                 }else{
                     consulta += ` , ${order}`;
-                }
-                
+                }                
             });
         }else{
             consulta += " ORDER BY f.idfactura desc";
-        }         
+        }
         
-        console.log(consulta);
         try {
-            const result = await db.querySelect(consulta);
-            const facturasDetalladas: IFacturaDetallada[] = result.map((res: any) => {
-                return {
-                    factura: {
-                        idfactura: res.idfactura,
-                        nro_factura: res.nro_factura,
-                        fecha_factura: res.fecha_factura,
-                        monto_total: res.monto_total,
-                        subtotal: res.subtotal,
-                        iva: res.iva,
-                        fkcolegio: res.fkcolegio,
-                        login_registro: res.login_registro,
-                        fecha_registro: res.fecha_registro,
-                        fecha_modificacion: res.fecha_modificacion,
-                        login_modificacion: res.login_modificacion,
-                        tasa_cambio: res.tasa_cambio,
-                        fecha_entrega_rrhh: res.fecha_entrega_rrhh,
-                        trabajador: res.trabajador
-                    },
-                    detalles: res.detalles.map((detalle: any) => {
-                        return {
-                            iddetfactura: detalle.iddetfactura,
-                            fkfactura: res.idfactura,
-                            fkbeneficiario: detalle.fkbeneficiario,
-                            fkmensualidad: detalle.fkmensualidad,
-                            mes: detalle.mes,
-                            monto: detalle.monto,
-                            corresponde: detalle.corresponde,
-                            fecha_modificacion: detalle.fecha_modificacion,
-                            login_modificacion: detalle.login_modificacion,
-                            tasa_cambio: detalle.tasa_cambio
-                        };
-                    })
-                };
-            });
+            const facturasResult = await db.querySelect(consulta);
+            const idfacturas = facturasResult.map((factura: any) => factura.idfactura);
+            let facturasDetalladas: IFacturaDetallada[] = [];
+            if (idfacturas.length > 0) {
+                const detallesConsulta = `
+                SELECT d.* FROM sibes_detfacturas d
+                WHERE d.fkfactura IN (${idfacturas.join(', ')})`;
+
+                const detallesResult = await db.querySelect(detallesConsulta);
+
+                const detallesMap: { [key: number]: any[] } = {};
+                detallesResult.forEach((detalle: any) => {
+                    if (!detallesMap[detalle.fkfactura]) {
+                        detallesMap[detalle.fkfactura] = [];
+                    }
+                    detallesMap[detalle.fkfactura].push(detalle);
+                });
+
+                facturasDetalladas = facturasResult.map((factura: any) => {
+                    return {
+                        factura: {
+                            idfactura: factura.idfactura,
+                            nro_factura: factura.nro_factura,
+                            fecha_factura: factura.fecha_factura,
+                            monto_total: factura.monto_total,
+                            subtotal: factura.subtotal,
+                            iva: factura.iva,
+                            fkcolegio: factura.fkcolegio,
+                            login_registro: factura.login_registro,
+                            fecha_registro: factura.fecha_registro,
+                            fecha_modificacion: factura.fecha_modificacion,
+                            login_modificacion: factura.login_modificacion,
+                            tasa_cambio: factura.tasa_cambio,
+                            fecha_entrega_rrhh: factura.fecha_entrega_rrhh,
+                            trabajador: factura.trabajador,
+                            estatus: factura.estatus,
+                            periodopago: factura.periodopago,
+                        },
+                        detalles: detallesMap[factura.idfactura] || []
+                    };
+                });
+            }
             
             res.status(200).json(facturasDetalladas);
             
@@ -228,9 +216,9 @@ class FacturasController{
 
             query =query.substring(0, query.length - 1);
             query += ') RETURNING *';
-            
+            console.log(query);
             const result: Ifactura[] = await db.querySelect(query);
-            //console.log(query);
+            
             if (!result){
                 res.status(200).json('Factura no registrada');
                 //res.status(200).json(query);
@@ -271,9 +259,9 @@ class FacturasController{
 
             query =query.substring(0, query.length - 1);
             query += ') RETURNING *';
-            
-            const result: Ifactura[] = await db.querySelect(query);
             //console.log(query);
+            const result: Ifactura[] = await db.querySelect(query);
+            
             if (!result){
                 res.status(200).json('Factura_beneficiario no registrada');
                 //res.status(200).json(query);
@@ -353,9 +341,9 @@ class FacturasController{
 
             query =query.substring(0, query.length - 1);
             query += ') RETURNING *';
-            
+            console.log(query);
             const result: Ifactura[] = await db.querySelect(query);
-            //console.log(query);
+            
             if (!result){
                 res.status(200).json('Factura no registrada');
                 //res.status(200).json(query);

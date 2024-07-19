@@ -2,7 +2,7 @@ export interface Ifactura
 {
     idfactura ?: number,
     nro_factura ?: string,
-    trabajador ?: number,
+    trabajador ?: string,
     fecha_factura ?: string,
     monto_total ?: string,
     subtotal ?: string,
@@ -14,6 +14,8 @@ export interface Ifactura
     login_modificacion ?: string,
     tasa_cambio ?: string,
     fecha_entrega_rrhh ?: string,
+    estatus ?: string, 
+    periodopago ?: string,
 }
 
 export interface IdetallesFactura
@@ -27,7 +29,7 @@ export interface IdetallesFactura
     corresponde ?: string,
     fecha_modificacion ?: string,
     login_modificacion ?: string,
-    tasa_cambio ?: string,    
+    tasa_cambio ?: string,
 }
 
 export interface IFacturaDetallada

@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { colegioController } from '../../controllers/sibes/colegios';
+import { colegioController } from '../../controllers/sibes/colegios.controller';
 class ColegiosRoutes {
 
     public router: Router = Router();

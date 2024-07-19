@@ -93,8 +93,9 @@ class inscripcionController{
 
             query =query.substring(0, query.length - 1);
             query += ') RETURNING *';
-            
-            const result/*: IPaciente[]*/ = await db.querySelect(query);
+            console.log(query);
+
+            const result = await db.querySelect(query);
             
             if (!result){
                 res.status(200).json('inscripcion no registrada');
@@ -107,7 +108,7 @@ class inscripcionController{
             }
             
         } catch (e) {
-            console.error(e);
+           console.error(e);
            res.status(500).json('Internal Server error');
         }
         

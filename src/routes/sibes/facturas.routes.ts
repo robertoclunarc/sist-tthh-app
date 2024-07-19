@@ -11,7 +11,7 @@ class ConsultasRoutes {
     config(): void{
         
         this.router.get('/consultar/detalle/:iddetfactura/:fkfactura', facturaController.detFacturaFilter);         
-        this.router.get('/filtrar/:idfactura/:nroFactura/:fechaFacturaIni/:fechaFacturaFin/:idColegio/:trabajador/:fechaEntregaIni/:fechaEntregaFin/:condlogica', facturaController.facturafilter);        
+        this.router.get('/filtrar/:idfactura/:nroFactura/:fechaFacturaIni/:fechaFacturaFin/:idColegio/:trabajador/:fechaEntregaIni/:fechaEntregaFin/:estatus/:periodo/:condlogica', facturaController.facturafilter);        
         this.router.put('/update/:IdReg', facturaController.updateRecordFactura); 
         this.router.put('/update/detalle/:IdReg', facturaController.updateRecordDetFactura);        
         this.router.delete('/delete/:IdReg', facturaController.deleteRecordFactura);

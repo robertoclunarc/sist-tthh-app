@@ -5,7 +5,7 @@ export interface Icolegio
     nombre_colegio ?: string,
     estatus_colegio ?: string,
     direccion_colegio ?: string,
-    localidada_colegio ?: string,
+    localidad_colegio ?: string,
     provincia ?: string,
     tipo_administracion ?: string,    
 }    
