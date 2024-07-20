@@ -1,11 +1,10 @@
 export interface Iusuarios
 {
-    login: string;
-    passw: string;
-    nombres: string;
-    nivel: number;
-    fkdepartamento?: number;
-    email?: string;
-    telefono_oficina?: string;
-    estatus?: string;
+    login_username ?: string, 
+    trabajador?: string, 
+    estatus?: string, 
+    nivel?: number,
+    fecha_ultima_sesion?: string, 
+    login_userpass?: string, 
+    email?: string, 
 }

@@ -10,23 +10,26 @@ class LoginController{
         console.log(user);
         console.log(passw);
         try {
-            const result: Iusuarios[] = await db.querySelect('SELECT * FROM usuarios WHERE login=$1', [user]);            
+            const result= await db.querySelect('SELECT * FROM usuarios WHERE login_username=$1', [user]);            
             if (result.length===0){                
                 res.status(200).json({error: "Usuario No Encontrado"});
             }
-            else{                
-                if (await validatePassword(passw, result[0].passw))  
-                {
-                    if (result[0].estatus=='ACTIVO'){
-                        console.log('logeado');
-                        res.status(200).json(result[0]);
+            else{
+                const user: Iusuarios = result[0];
+                if (user.login_userpass){
+                    if (await validatePassword(passw, user.login_userpass))  
+                    {
+                        if (user.estatus=='ACTIVO'){
+                            console.log(user.login_username, 'logeado');
+                            res.status(200).json(user);
+                        }else{
+                            
+                            res.status(200).json({error: `Usuario  ${user.estatus}`});
+                        }                    
                     }else{
-                        
-                        res.status(200).json({error: `Usuario  ${result[0].estatus}`});
-                    }                    
-                }else{
-                    res.status(200).json({error: 'Clave Incorrecta'});
-                }                
+                        res.status(200).json({error: 'Clave Incorrecta'});
+                    }
+                }
             }
             
         } catch (e) {

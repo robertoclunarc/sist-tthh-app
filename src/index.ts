@@ -32,16 +32,18 @@ class Server {
 
     routes(): void{
         this.app.use(indexRoutes);
-        this.app.use('/sist_tthh/api/sibes/varios',variosRoutes);
-        this.app.use('/sist_tthh/api/sibes/login', logInRoutes);
-        this.app.use('/sist_tthh/api/sibes/menus',menusRoutes);
-        this.app.use('/sist_tthh/api/sibes/correo',correosRoutes);
         this.app.use('/sist_tthh/api/trabajadores',trabajadoresRoutes);
-        this.app.use('/sist_tthh/api/facturas',facturasRoutes);
-        this.app.use('/sist_tthh/api/colegios',colegiosRoutes);
-        this.app.use('/sist_tthh/api/beneficiarios',beneficiariosRoutes);
-        this.app.use('/sist_tthh/api/inscripciones', inscripcionesRoutes);
-        this.app.use('/sist_tthh/api/mensualidades', mensualidadesRoutes);
+        this.app.use('/sist_tthh/api/login', logInRoutes);
+        
+        this.app.use('/sist_tthh/api/sibes/varios',variosRoutes);        
+        this.app.use('/sist_tthh/api/sibes/menus',menusRoutes);
+        this.app.use('/sist_tthh/api/sibes/correo',correosRoutes);        
+        this.app.use('/sist_tthh/api/sibes/facturas',facturasRoutes);
+        this.app.use('/sist_tthh/api/sibes/colegios',colegiosRoutes);
+        this.app.use('/sist_tthh/api/sibes/beneficiarios',beneficiariosRoutes);
+        this.app.use('/sist_tthh/api/sibes/inscripciones', inscripcionesRoutes);
+        this.app.use('/sist_tthh/api/sibes/mensualidades', mensualidadesRoutes);
+        
     }
 
     start(): void{
