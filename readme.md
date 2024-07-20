@@ -3,7 +3,7 @@
 ## Rutas: 
 ### /sist_tthh/api/sibes/login
 - post('/login/', loginController.logear);        
-- get('/usuarios/filtrados/:trabajador', loginController.usuariosFiltrados);
+- get('/usuarios/filtrados/:trabajador/:nivel', loginController.usuariosFiltrados);
 
 ### /sist_tthh/api/sibes/menus
 - get('/consultar', menuController.menusAll);

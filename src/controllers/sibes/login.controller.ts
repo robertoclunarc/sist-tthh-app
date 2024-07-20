@@ -40,10 +40,37 @@ class LoginController{
     }    
 
     public async usuariosFiltrados (req: Request, res: Response): Promise<void> {
-        const trabajador: string = req.params.trabajador
-        
+        const trabajador: string = req.params.trabajador;
+        const nivel: string = req.params.nivel;
+
+        const valueIsNull = [undefined, 'null', 'NULL', ''];
+               
+        let filtro = {
+            trabajador: valueIsNull.indexOf(req.params.trabajador)  != -1  ? null : req.params.trabajador,
+            nivel: valueIsNull.indexOf(req.params.nivel)  != -1 ? null : req.params.nivel,
+        }
+
+        let query: string ="SELECT * FROM usuarios ";
+        let where: string[] = [];
         try {
-            const result: Iusuarios[] = await db.querySelect('SELECT * FROM usuarios WHERE trabajador=$1', [trabajador]);
+            if (filtro.trabajador!=null || filtro.nivel!=null){
+                if (filtro.trabajador!=null){
+                    where.push( ` trabajador = '${filtro.trabajador}' `);   
+                }
+
+                if (filtro.nivel!=null){
+                    where.push( ` nivel = ${filtro.nivel}`);
+                }
+
+                where.forEach(function(where, index) {
+                    if (index==0){
+                        query += ` WHERE ${where}`; 
+                    }else{
+                        query += ` AND ${where}`;
+                    }
+                }); 
+            }
+            const result: Iusuarios[] = await db.querySelect(query);
             
             if (!result){
                 res.status(200).json('usuario no encontrado');

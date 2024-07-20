@@ -10,7 +10,7 @@ class variosRoutes {
 
     config(): void{
         this.router.post('/', loginController.logear);        
-        this.router.get('/usuarios/filtrados/:trabajador', loginController.usuariosFiltrados);
+        this.router.get('/usuarios/filtrados/:trabajador/:nivel', loginController.usuariosFiltrados);
     }
 }
 
