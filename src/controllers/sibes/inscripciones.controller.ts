@@ -71,6 +71,23 @@ class inscripcionController{
         }        
     }
 
+    public async totalInscripciones (req: Request, res: Response): Promise<void> {
+        let consulta = "SELECT anio_escolar, COUNT(*) as totalinscritos, SUM(monto_inscripcion::numeric) as montototal FROM sibes_inscripciones \
+        GROUP BY anio_escolar \
+        ORDER BY anio_escolar DESC";
+        
+        try {            
+            
+            const results: any[] = await db.querySelect(consulta);            
+            
+            res.status(200).json(results);
+            
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({msj: 'Internal Server error', error: e, sql: consulta});
+        }        
+    }
+
     public async createRecord (req: Request, res: Response): Promise<void> {
         let newPost: any = req.body;
         let query : string = "INSERT INTO sibes_inscripciones (";
