@@ -233,6 +233,61 @@ CREATE TABLE IF NOT EXISTS public.sibes_detfacturas
         ON DELETE NO ACTION
 )
 
+CREATE TABLE IF NOT EXISTS public.sibes_facturas_beneficiarios
+(
+    idfacturabenf integer NOT NULL DEFAULT nextval('sibes_facturas_beneficiarios_idfacturabenf_seq'::regclass),
+    fkfactura integer NOT NULL,
+    fkbeneficiario integer NOT NULL,
+    CONSTRAINT sibes_facturasbeneficiarios_pkey PRIMARY KEY (idfacturabenf),
+    CONSTRAINT sibes_facturas_fkey FOREIGN KEY (fkfactura)
+        REFERENCES public.sibes_facturas (idfactura) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT sibes_facturasbenef_fkey FOREIGN KEY (fkbeneficiario)
+        REFERENCES public.sibes_beneficiarios (idbeneficiario) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+CREATE TABLE public.sibes_niveles_educacion
+(
+    idnivel serial NOT NULL,
+    descripcion character varying(25),
+    estatus character varying(10),    
+    CONSTRAINT sibes_niveles_educacion_pkey PRIMARY KEY (idnivel)
+)
+
+CREATE TABLE public.sibes_grados_escolarizacion
+(
+    idgrado serial NOT NULL,
+    descripcion character varying(25),
+    estatus character varying(10),    
+    CONSTRAINT sibes_grados_escolarizacion_pkey PRIMARY KEY (idgrado)
+)
+
+insert into sibes_niveles_educacion (descripcion,estatus) values
+('PRE-ESCOLAR','ACTIVO'),
+('PRIMARIA','ACTIVO'),
+('SECUNDARIA','ACTIVO'),
+('DIVERSIFICADO','ACTIVO')
+
+insert into sibes_grados_escolarizacion (descripcion,estatus) values
+('1er Nivel','ACTIVO'),
+('2do Nivel','ACTIVO'),
+('3er Nivel','ACTIVO'),
+('1er Grado','ACTIVO'),
+('2do Grado','ACTIVO'),
+('3er Grado','ACTIVO'),
+('4to Grado','ACTIVO'),
+('5to Grado','ACTIVO'),
+('6to Grado','ACTIVO'),
+('7mo Grado','ACTIVO'),
+('8vo Grado','ACTIVO'),
+('9no Grado','ACTIVO'),
+('4to Año','ACTIVO'),
+('5to Año','ACTIVO'),
+('6to Año','ACTIVO')
+
 CREATE OR REPLACE FUNCTION public.crear_pagos_mensuales()
     RETURNS trigger
     LANGUAGE 'plpgsql'

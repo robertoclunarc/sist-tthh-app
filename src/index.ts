@@ -34,8 +34,8 @@ class Server {
         this.app.use(indexRoutes);
         this.app.use('/sist_tthh/api/trabajadores',trabajadoresRoutes);
         this.app.use('/sist_tthh/api/login', logInRoutes);
-        
-        this.app.use('/sist_tthh/api/sibes/varios',variosRoutes);        
+        this.app.use('/sist_tthh/api/varios',variosRoutes); 
+               
         this.app.use('/sist_tthh/api/sibes/menus',menusRoutes);
         this.app.use('/sist_tthh/api/sibes/correo',correosRoutes);        
         this.app.use('/sist_tthh/api/sibes/facturas',facturasRoutes);

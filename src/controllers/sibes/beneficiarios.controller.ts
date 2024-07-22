@@ -1,16 +1,17 @@
 import { Request,  Response  } from 'express';
 import db from '../../database';
-import { Ibeneficiario } from '../../interfaces/sibes/beneficiarios';
+import { Ibeneficiario, IvBeneficiario } from '../../interfaces/sibes/beneficiarios';
 
 class BeneficiarioController{ 
 
     public async beneficiariofilter (req: Request, res: Response): Promise<void> {
-        let consulta = "SELECT b.*, EXTRACT(YEAR FROM age(TO_DATE(EXTRACT(YEAR FROM CURRENT_DATE) || '-12-31', 'YYYY-MM-DD'), fecha_nac)) AS edad FROM sibes_beneficiarios b";
+        let consulta = "SELECT b.*, replace(t.nombre, '/', ' ') as nombretrabajador, EXTRACT(YEAR FROM age(TO_DATE(EXTRACT(YEAR FROM CURRENT_DATE) || '-12-31', 'YYYY-MM-DD'), fecha_nac)) AS edad FROM sibes_beneficiarios b LEFT JOIN trabajadores t ON t.trabajador=b.trabajador ";
         const valueIsNull = [undefined, 'null', 'NULL', ''];
         const regex = /^[0-9]*$/;        
         let filtro = {
             id: valueIsNull.indexOf(req.params.id)  != -1  ? null : req.params.id,
             nombre: valueIsNull.indexOf(req.params.nombre)  != -1 ? null : req.params.nombre,
+            nombreTrabajador: valueIsNull.indexOf(req.params.nombreTrabajador)  != -1 ? null : req.params.nombreTrabajador,
             cedula: valueIsNull.indexOf(req.params.cedula)  != -1 ? null : req.params.cedula,
             trabajador: valueIsNull.indexOf(req.params.trabajador)  != -1 ? null : req.params.trabajador,
             sexo: valueIsNull.indexOf(req.params.sexo)  != -1 ? null : req.params.sexo,            
@@ -25,13 +26,18 @@ class BeneficiarioController{
         let orderBy: string[] = [];
     
         if (filtro.id !=null || filtro.nombre!=null || filtro.cedula!=null || filtro.trabajador !=null || filtro.sexo || filtro.grado  || filtro.nivelEduc || filtro.edadIni || filtro.edadFin){        
-            if (filtro.id !=null){
+            if (filtro.id !=null  &&  regex.test(filtro.id)){
                 where.push( " idbeneficiario  = " + filtro.id + " ");                
             }
 
             if (filtro.nombre !=null){
                 where.push( " nombre_beneficiario Ilike '%" + filtro.nombre + "%' ");
                 orderBy.push('nombre_beneficiario')
+            }
+
+            if (filtro.nombreTrabajador !=null){
+                where.push( " t.nombre Ilike '%" + filtro.nombreTrabajador + "%' ");
+                orderBy.push('t.nombre')
             }
 
             if (filtro.cedula !=null){
@@ -54,7 +60,7 @@ class BeneficiarioController{
                 orderBy.push('nivel_educativo')
             }
 
-            if (filtro.edadIni !=null && filtro.edadFin !=null){
+            if (filtro.edadIni !=null && filtro.edadFin !=null   &&  regex.test(filtro.edadIni)   &&  regex.test(filtro.edadFin)){
                 where.push( " EXTRACT(YEAR FROM age(TO_DATE(EXTRACT(YEAR FROM CURRENT_DATE) || '-12-31', 'YYYY-MM-DD'), fecha_nac)) BETWEEN " + filtro.edadIni + " AND " + filtro.edadFin);
                 orderBy.push('nivel_educativo')
             }
@@ -82,7 +88,7 @@ class BeneficiarioController{
         
         try {            
             
-            const beneficiarios: Ibeneficiario[] = await db.querySelect(consulta);            
+            const beneficiarios: IvBeneficiario[] = await db.querySelect(consulta);            
             
             res.status(200).json(beneficiarios);
             

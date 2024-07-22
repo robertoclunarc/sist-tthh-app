@@ -14,9 +14,11 @@
 - post('/send/path',envioCorreo.sendFromPath);
 - get('/remitentes/:actividad',envioCorreo.remitentes);
 
-### /sist_tthh/api/sibes/varios
+### /sist_tthh/api/varios
 - get('/prueba/', varController.prueba);       
 - get('/generar/serie/:inicio/:fin/:interval/:formato', varController.generateSeries);
+- get('/niveleseducacion/all', varController.nivelesEducacionAll);
+- get('/gradosescolarizacion/all', varController.gradosEscolarizacionAll);
 
 ### /sist_tthh/api/trabajadores
 - get('/consultar', trabajadoresController.trabajadoresAll); 
@@ -112,6 +114,7 @@
 ```
 ### /sist_tthh/api/inscripciones
 - get('/consultar/:id/:fkbeneficiario/:fkcolegio/:anio_escolar', inscripcionsController.inscripcionfilter);
+- get('/consultar/totalinscripciones', inscripcionsController.totalInscripciones);
 - put('/update/:IdReg', inscripcionsController.updateRecord);
 - delete('/delete/:IdReg', inscripcionsController.deleteRecord);
 - post('/insert', inscripcionsController.createRecord)
