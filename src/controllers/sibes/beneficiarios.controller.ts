@@ -26,12 +26,12 @@ class BeneficiarioController{
         let orderBy: string[] = [];
     
         if (filtro.id !=null || filtro.nombre!=null || filtro.cedula!=null || filtro.trabajador !=null || filtro.sexo || filtro.grado  || filtro.nivelEduc || filtro.edadIni || filtro.edadFin){        
-            if (filtro.id !=null  &&  regex.test(filtro.id)){
-                where.push( " idbeneficiario  = " + filtro.id + " ");                
+            if (filtro.id !=null && regex.test(filtro.id)){
+                where.push( " b.idbeneficiario  = " + filtro.id + " ");                
             }
 
             if (filtro.nombre !=null){
-                where.push( " nombre_beneficiario Ilike '%" + filtro.nombre + "%' ");
+                where.push( " b.nombre_beneficiario Ilike '%" + filtro.nombre + "%' ");
                 orderBy.push('nombre_beneficiario')
             }
 
@@ -40,28 +40,28 @@ class BeneficiarioController{
                 orderBy.push('t.nombre')
             }
 
-            if (filtro.cedula !=null){
-                where.push( " cedula like '%" + filtro.cedula + "%' ");
-                orderBy.push('cedula')
+            if (filtro.cedula !=null && regex.test(filtro.cedula)){
+                where.push( " b.cedula like '%" + filtro.cedula + "%' ");
+                orderBy.push('b.cedula')
             }
 
-            if (filtro.trabajador !=null){
-                where.push( " trabajador LIKE '%" + filtro.trabajador + "%' ");
-                orderBy.push('trabajador')
+            if (filtro.trabajador !=null && regex.test(filtro.trabajador)){
+                where.push( " b.trabajador LIKE '%" + filtro.trabajador + "%' ");
+                orderBy.push('b.trabajador')
             }
 
             if (filtro.sexo !=null){
-                where.push( " sexo_beneficiario = '" + filtro.sexo + "' ");
-                orderBy.push('sexo_beneficiario')
+                where.push( " b.sexo_beneficiario = '" + filtro.sexo + "' ");
+                orderBy.push('b.sexo_beneficiario')
             }
 
             if (filtro.nivelEduc !=null){
-                where.push( " nivel_educativo Ilike '%" + filtro.nivelEduc + "%' ");
-                orderBy.push('nivel_educativo')
+                where.push( " b.nivel_educativo Ilike '%" + filtro.nivelEduc + "%' ");
+                orderBy.push('b.nivel_educativo')
             }
 
-            if (filtro.edadIni !=null && filtro.edadFin !=null   &&  regex.test(filtro.edadIni)   &&  regex.test(filtro.edadFin)){
-                where.push( " EXTRACT(YEAR FROM age(TO_DATE(EXTRACT(YEAR FROM CURRENT_DATE) || '-12-31', 'YYYY-MM-DD'), fecha_nac)) BETWEEN " + filtro.edadIni + " AND " + filtro.edadFin);
+            if (filtro.edadIni !=null && filtro.edadFin !=null && regex.test(filtro.edadIni) && regex.test(filtro.edadFin)){
+                where.push( " EXTRACT(YEAR FROM age(TO_DATE(EXTRACT(YEAR FROM CURRENT_DATE) || '-12-31', 'YYYY-MM-DD'), b.fecha_nac)) BETWEEN " + filtro.edadIni + " AND " + filtro.edadFin);
                 orderBy.push('nivel_educativo')
             }
 
@@ -83,7 +83,7 @@ class BeneficiarioController{
                 
             });
         }else{
-            consulta += " ORDER BY idbeneficiario desc";
+            consulta += " ORDER BY b.idbeneficiario desc";
         } 
         
         try {            
