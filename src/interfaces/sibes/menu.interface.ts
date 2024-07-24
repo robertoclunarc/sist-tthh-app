@@ -78,3 +78,15 @@ export interface INavData {
     wrapper?: INavWrapper;
     linkProps?: INavLinkProps;
 }
+
+export interface IpermisoUsuario {
+    idmenu?: number,
+    name?: string,
+    url?: string,
+    login?: string,
+    pupdate?: boolean,
+    pinsert?: boolean,
+    pdelete?: boolean,
+    pselect?: boolean,
+    export?: boolean,
+}

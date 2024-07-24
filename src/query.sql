@@ -286,7 +286,14 @@ insert into sibes_grados_escolarizacion (descripcion,estatus) values
 ('9no Grado','ACTIVO'),
 ('4to Año','ACTIVO'),
 ('5to Año','ACTIVO'),
-('6to Año','ACTIVO')
+('6to Año','ACTIVO');
+
+ALTER TABLE sibes_menus_usuarios
+ADD export boolean;
+update sibes_menus_usuarios set export=true;
+
+alter table sibes_menus_usuarios add column estatus varchar(10);
+update public.sibes_menus_usuarios set estatus='ACTIVO';
 
 CREATE OR REPLACE FUNCTION public.crear_pagos_mensuales()
     RETURNS trigger

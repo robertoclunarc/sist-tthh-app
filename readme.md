@@ -8,6 +8,7 @@
 ### /sist_tthh/api/sibes/menus
 - get('/consultar', menuController.menusAll);
 - get('/consultar/:user', menuController.menusUsuario);
+- get('/permisos/:user/:idmenu', menuController.permisosUsuario);
 
 ### /sist_tthh/api/sibes/correo
 - post('/send/memory',envioCorreo.sendFromMemory);

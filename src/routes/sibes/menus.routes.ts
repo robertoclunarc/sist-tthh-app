@@ -11,6 +11,7 @@ class MenusRoutes {
     config(): void{
         this.router.get('/consultar', menuController.menusAll);
         this.router.get('/consultar/:user', menuController.menusUsuario);
+        this.router.get('/permisos/:user/:urlmenu', menuController.permisosUsuario);
     }
 }
 
