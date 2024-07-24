@@ -7,7 +7,7 @@ class TrabajadoresController{
     public async trabajadoresAll (req: Request, res: Response): Promise<void> {
         
         try {            
-            const result: ITrabajadores[] = await db.querySelect(`SELECT trabajador, nombre, email, concat(siglado, '@briven.com.ve) as correo, trabajador_sup, nombre_sup FROM v_trabajadores`);
+            const result: ITrabajadores[] = await db.querySelect(`SELECT * FROM trabajadores`);
             //console.log(result);
             if (!result){
                 res.status(200).json('no encontrado');
@@ -26,9 +26,9 @@ class TrabajadoresController{
     }
 
     public async trabajadorCedula (req: Request, res: Response): Promise<void> {
-        const IdReg: string = req.params.IdReg
+        const ci: string = req.params.ci
         try {            
-            const result: ITrabajadores[] = await db.querySelect(`SELECT trabajador, nombre, email, concat(siglado, '@briven.com.ve') as correo, trabajador_sup, nombre_sup FROM v_trabajadores WHERE trabajador=$1`, [IdReg]);
+            const result: ITrabajadores[] = await db.querySelect(`SELECT * FROM trabajadores WHERE trabajador=$1`, [ci]);
             //console.log(result);
             if (!result){
                 res.status(200).json('no encontrado');

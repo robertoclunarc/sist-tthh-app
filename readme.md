@@ -22,7 +22,7 @@
 
 ### /sist_tthh/api/trabajadores
 - get('/consultar', trabajadoresController.trabajadoresAll); 
-- get('/consultar/cedula/:IdReg', trabajadoresController.trabajadorCedula);
+- get('/consultar/cedula/:ci', trabajadoresController.trabajadorCedula);
 - get('/subordinados/supervisor/:login', trabajadoresController.trabajadoresPorSigladoSupervisor);
 
 ### /sist_tthh/api/facturas

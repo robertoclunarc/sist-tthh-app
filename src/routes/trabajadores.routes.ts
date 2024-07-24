@@ -10,7 +10,7 @@ class TrabajadoresRoutes {
 
     config(): void{
         this.router.get('/consultar', trabajadoresController.trabajadoresAll); 
-        this.router.get('/consultar/cedula/:IdReg', trabajadoresController.trabajadorCedula);
+        this.router.get('/consultar/cedula/:ci', trabajadoresController.trabajadorCedula);
         this.router.get('/subordinados/supervisor/:login', trabajadoresController.trabajadoresPorSigladoSupervisor);
     }
 }

@@ -7,8 +7,7 @@ class LoginController{
     public async logear (req: Request, res: Response): Promise<void> {
         const user: string = req.body.login;
         const passw: string = req.body.passw;
-        console.log(user);
-        console.log(passw);
+        
         try {
             const result= await db.querySelect('SELECT * FROM usuarios WHERE login_username=$1', [user]);            
             if (result.length===0){                
