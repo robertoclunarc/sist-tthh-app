@@ -6,7 +6,7 @@ class ColegiosController{
 
     public async colegiofilter (req: Request, res: Response): Promise<void> {
         let consulta = "SELECT * FROM sibes_colegios ";
-        const valueIsNull = [undefined, 'null', 'NULL', ''];
+        const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
         const regex = /^[0-9]*$/;        
         let filtro = {
             id: valueIsNull.indexOf(req.params.id)  != -1  ? null : req.params.id,

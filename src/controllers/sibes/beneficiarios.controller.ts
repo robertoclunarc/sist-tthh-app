@@ -6,7 +6,7 @@ class BeneficiarioController{
 
     public async beneficiariofilter (req: Request, res: Response): Promise<void> {
         let consulta = "SELECT b.*, replace(t.nombre, '/', ' ') as nombretrabajador, EXTRACT(YEAR FROM age(TO_DATE(EXTRACT(YEAR FROM CURRENT_DATE) || '-12-31', 'YYYY-MM-DD'), fecha_nac)) AS edad FROM sibes_beneficiarios b LEFT JOIN trabajadores t ON t.trabajador=b.trabajador ";
-        const valueIsNull = [undefined, 'null', 'NULL', ''];
+        const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
         const regex = /^[0-9]*$/;        
         let filtro = {
             id: valueIsNull.indexOf(req.params.id)  != -1  ? null : req.params.id,
@@ -18,14 +18,15 @@ class BeneficiarioController{
             grado: valueIsNull.indexOf(req.params.grado)  != -1 ? null : req.params.grado,
             nivelEduc: valueIsNull.indexOf(req.params.nivelEduc)  != -1 ? null : req.params.nivelEduc,
             edadIni: valueIsNull.indexOf(req.params.edadIni)  != -1 ? null : req.params.edadIni,
-            edadFin: valueIsNull.indexOf(req.params.edadFin)  != -1 ? null : req.params.edadFin,            
+            edadFin: valueIsNull.indexOf(req.params.edadFin)  != -1 ? null : req.params.edadFin,
+            estatus: valueIsNull.indexOf(req.params.estatus)  != -1 ? null : req.params.estatus,           
             condlogica: valueIsNull.indexOf(req.params.condlogica)  >= 0 ? 'OR' : req.params.condlogica,                        
         }
 
         let where: string[] = [];
         let orderBy: string[] = [];
     
-        if (filtro.id !=null || filtro.nombre!=null || filtro.cedula!=null || filtro.trabajador !=null || filtro.sexo || filtro.grado  || filtro.nivelEduc || filtro.edadIni || filtro.edadFin){        
+        if (filtro.id !=null || filtro.nombre!=null || filtro.cedula!=null || filtro.trabajador !=null || filtro.sexo!=null || filtro.grado!=null  || filtro.nivelEduc!=null || filtro.edadIni!=null || filtro.edadFin!=null || filtro.estatus!=null){        
             if (filtro.id !=null && regex.test(filtro.id)){
                 where.push( " b.idbeneficiario  = " + filtro.id + " ");                
             }
@@ -56,8 +57,13 @@ class BeneficiarioController{
             }
 
             if (filtro.nivelEduc !=null){
-                where.push( " b.nivel_educativo Ilike '%" + filtro.nivelEduc + "%' ");
+                where.push( " b.nivel_educativo = '" + filtro.nivelEduc + "' ");
                 orderBy.push('b.nivel_educativo')
+            }
+
+            if (filtro.estatus !=null){
+                where.push( " b.estatus_beneficio = '" + filtro.estatus + "' ");
+                orderBy.push('b.estatus_beneficio')
             }
 
             if (filtro.edadIni !=null && filtro.edadFin !=null && regex.test(filtro.edadIni) && regex.test(filtro.edadFin)){
