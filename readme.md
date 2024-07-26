@@ -116,6 +116,7 @@
 ```
 ### /sist_tthh/api/inscripciones
 - get('/consultar/:id/:fkbeneficiario/:fkcolegio/:anio_escolar', inscripcionsController.inscripcionfilter);
+- get('/consultar/beneficiarios/trabajadores/:trabajador/:nombreTrabajador/:cedula/:nombreBeneficiario/:estatus/:anioEscolar/:condlogica', inscripcionsController.trabajadoresConBeneficiariosInsc);
 - get('/consultar/totalinscripciones', inscripcionsController.totalInscripciones);
 - put('/update/:IdReg', inscripcionsController.updateRecord);
 - delete('/delete/:IdReg', inscripcionsController.deleteRecord);

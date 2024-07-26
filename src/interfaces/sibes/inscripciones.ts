@@ -1,3 +1,7 @@
+import { ITrabajadores } from "interfaces/trabajadores.interface";
+import { Ibeneficiario } from "./beneficiarios";
+import { Icolegio } from "./colegios";
+
 export interface Iinscripcion
 {
     idinscripcion ?: number,
@@ -16,4 +20,10 @@ export interface Iinscripcion
     tasa_cambio ?: string,
     grado_escolarizacion ?: string,
     nivel_educativo ?: string,
+}
+
+export interface ITrabajadoresConBenefInscritos{
+    trabajador?: ITrabajadores,
+    beneficairio?: Ibeneficiario,
+    inscripciones?: { inscripcion?: Iinscripcion, colegio?: Icolegio}[],
 }

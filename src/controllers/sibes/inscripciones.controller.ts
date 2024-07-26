@@ -1,6 +1,6 @@
 import { Request,  Response  } from 'express';
 import db from '../../database';
-import { Iinscripcion } from '../../interfaces/sibes/inscripciones';
+import { Iinscripcion, ITrabajadoresConBenefInscritos } from '../../interfaces/sibes/inscripciones';
 
 class inscripcionController{ 
 
@@ -69,6 +69,179 @@ class inscripcionController{
             console.error(e);
             res.status(500).json({msj: 'Internal Server error', error: e, sql: consulta});
         }        
+    }
+
+    public async trabajadoresConBeneficiariosInsc (req: Request, res: Response): Promise<void> {
+        let consulta = "select t.*, b.* from trabajadores t inner join sibes_beneficiarios b on t.trabajador=b.trabajador inner join sibes_inscripciones i on i.fkbeneficiario=b.idbeneficiario";
+        const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
+        const regex = /^[0-9]*$/;
+        const IdReg: string = req.params.IdReg
+        let filtro = {
+            trabajador: valueIsNull.indexOf(req.params.trabajador)  != -1  ? null : req.params.trabajador,
+            nombreTrabajador: valueIsNull.indexOf(req.params.nombreTrabajador)  != -1 ? null : req.params.nombreTrabajador,
+            cedula: valueIsNull.indexOf(req.params.cedula)  != -1 ? null : req.params.cedula,
+            nombreBeneficiario: valueIsNull.indexOf(req.params.nombreBeneficiario)  != -1 ? null : req.params.nombreBeneficiario,
+            estatus: valueIsNull.indexOf(req.params.estatus)  != -1 ? null : req.params.estatus,
+            anioEscolar: valueIsNull.indexOf(req.params.anioEscolar)  != -1 ? null : req.params.anioEscolar,
+            condlogica: valueIsNull.indexOf(req.params.condlogica)  >= 0 ? 'OR' : req.params.condlogica,
+        }        
+
+        let where: string[] = [];
+        let orderBy: string[] = [];
+        if (filtro.trabajador !==null || filtro.nombreTrabajador!==null || filtro.cedula!==null || filtro.nombreBeneficiario!==null || filtro.estatus!==null || filtro.anioEscolar!==null){            
+
+            if (filtro.trabajador !==null && regex.test(filtro.trabajador)){
+                where.push( ` t.trabajador like '%${filtro.trabajador}%' `);
+                orderBy.push('t.trabajador');
+            }
+            
+            if (filtro.cedula !==null && regex.test(filtro.cedula)){
+                where.push( ` b.cedula like '%${filtro.cedula}%' `);
+                orderBy.push('b.cedula');
+            }            
+
+            if (filtro.nombreTrabajador !==null){
+                where.push( ` t.nombres like '%${filtro.nombreTrabajador}%' `);
+                orderBy.push('t.nombres');
+            }
+
+            if (filtro.nombreBeneficiario !==null){
+                where.push( ` b.nombre_beneficiario like '%${filtro.nombreBeneficiario}%' `);
+                orderBy.push('b.nombre_beneficiario');
+            }
+
+            if (filtro.estatus !=null){
+                where.push(` and  i.estatus_inscripcioin = '${filtro.estatus}`);                    
+            }
+
+            if (filtro.anioEscolar !==null && regex.test(filtro.anioEscolar)){
+                where.push( ` i.anio_escolar = ${filtro.anioEscolar}`);                
+            }
+            
+            where.forEach(function(w, index) {
+                if (index==0){
+                     consulta += ` WHERE ${w}`;
+                }else{                    
+                    consulta += ` ${filtro.condlogica} ${w}`;
+                }    
+            }); 
+        }
+
+        if (orderBy.length>0){
+            orderBy.forEach(function(order, index) {
+                if (index==0){
+                    consulta += ` ORDER BY ${order}`; 
+                }else{
+                    consulta += ` , ${order}`;
+                }                
+            });
+        }else{
+            consulta += " ORDER BY t.trabajador";
+        }
+        console.log(consulta);
+        try {
+            const trabajadoresResult = await db.querySelect(consulta);
+            const idbeneficiarios = trabajadoresResult.map((benef: any) => benef.idbeneficiario);
+            let trabajadoresBenefInscritos: ITrabajadoresConBenefInscritos[] = [];
+            if (idbeneficiarios.length > 0) {
+                let _inscripciones = `
+                select i.*, c.* from sibes_inscripciones i inner join sibes_colegios c on i.fkcolegio=c.idcolegio
+                WHERE i.fkbeneficiario IN (${idbeneficiarios.join(', ')})`;
+
+                if (filtro.estatus !=null){
+                    _inscripciones += ` and  i.estatus_inscripcioin = '${filtro.estatus}`;                    
+                }
+
+                _inscripciones += ` order by i.fecha_inscripcion desc `;
+
+                const inscripcionesResult = await db.querySelect(_inscripciones);
+
+                const incripcionesMap: { [key: number]: any[] } = {};
+                inscripcionesResult.forEach((inscrip: any) => {
+                    if (!incripcionesMap[inscrip.fkbeneficiario]) {
+                        incripcionesMap[inscrip.fkbeneficiario] = [];
+                    }
+                    incripcionesMap[inscrip.fkbeneficiario].push({
+                        inscripcion: {
+                            idinscripcion : inscrip.idinscripcion,
+                            fkbeneficiario : inscrip.fkbeneficiario,
+                            fkcolegio : inscrip.fkcolegio,
+                            fecha_inscripcion : inscrip.fecha_inscripcion,
+                            anio_escolar : inscrip.anio_escolar,
+                            monto_inscripcion : inscrip.monto_inscripcion,
+                            monto_mensual : inscrip.monto_mensual,
+                            login_registro : inscrip.login_registro,
+                            fecha_registro : inscrip.fecha_registro,
+                            estatus_inscripcioin : inscrip.estatus_inscripcioin,
+                            mes_inicio : inscrip.mes_inicio,
+                            fecha_modificacion : inscrip.fecha_modificacion,
+                            login_modificacion : inscrip.login_modificacion,
+                            tasa_cambio : inscrip.tasa_cambio,
+                            grado_escolarizacion : inscrip.grado_escolarizacion,
+                            nivel_educativo : inscrip.nivel_educativo,
+                        },
+                        colegio: {
+                            idcolegio : inscrip.idcolegio,
+                            rif_colegio : inscrip.rif_colegio,
+                            nombre_colegio : inscrip.nombre_colegio,
+                            estatus_colegio : inscrip.estatus_colegio,
+                            direccion_colegio : inscrip.direccion_colegio,
+                            localidad_colegio : inscrip.localidad_colegio,
+                            provincia : inscrip.provincia,
+                            tipo_administracion : inscrip.tipo_administracion, 
+                        },
+                    });
+                });
+
+                trabajadoresBenefInscritos = trabajadoresResult.map((res: any) => {
+                    return {
+                        trabajador: {
+                            trabajador: res.trabajador,
+                            registro_fiscal: res.registro_fiscal,
+                            nombre: res.nombre,
+                            sexo: res.sexo,
+                            fecha_nacimiento: res.fecha_nacimiento,
+                            domicilio: res.domicilio,
+                            domicilio2: res.domicilio2,
+                            poblacion: res.poblacion,
+                            estado_provincia: res.estado_provincia,
+                            pais: res.pais,
+                            codigo_postal: res.codigo_postal,
+                            calles_aledanas: res.calles_aledanas,
+                            telefono_particular: res.telefono_particular,
+                            reg_seguro_social: res.reg_seguro_social,
+                            domicilio3: res.domicilio3,
+                            e_mail: res.e_mail,
+                            fkunidad: res.fkunidad,
+                            tipo_documento: res.tipo_documento,
+                            nombres: res.nombres,
+                            apellidos: res.apellidos,
+                            edo_civil: res.edo_civil,
+                        },
+                        beneficairio:{
+                            idbeneficiario : res.idbeneficiario,
+                            cedula : res.cedula,
+                            trabajador : res.trabajador,
+                            fecha_nac : res.fecha_nac,
+                            sexo_beneficiario : res.sexo_beneficiario,    
+                            pago_colegio : res.pago_colegio,
+                            estatus_beneficio : res.estatus_beneficio,
+                            nombre_beneficiario : res.nombre_beneficiario,                            
+                            grado_escolarizacion : res.grado_escolarizacion,
+                            nivel_educativo : res.nivel_educativo,
+                            
+                        },
+                        inscripciones: incripcionesMap[res.idbeneficiario] || []
+                    };
+                });
+            }
+            
+            res.status(200).json(trabajadoresBenefInscritos);
+            
+        } catch (e) {
+            console.error(e);
+            res.status(500).json('Internal Server error');
+        }
     }
 
     public async totalInscripciones (req: Request, res: Response): Promise<void> {
