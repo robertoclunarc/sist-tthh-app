@@ -38,6 +38,22 @@ class VariosController{
         }        
     }
 
+    public async provinciasAll (req: Request, res: Response): Promise<void> {        
+        try {
+            const result: {idprovincia: number, provincia: string }[] = await db.querySelect('SELECT * FROM provincias order by idprovincia');
+            
+            if (!result){
+                res.status(400).json('provincia no encontrada');
+            }
+            else{                    
+                res.status(200).json(result);                
+            }            
+        } catch (e) {
+            console.error(e);
+            res.status(500).json('Internal Server error');
+        }        
+    }
+
     public async gradosEscolarizacionAll (req: Request, res: Response): Promise<void> {        
         try {
             const result: IgradosEscolarizacion[] = await db.querySelect('SELECT * FROM sibes_grados_escolarizacion ');

@@ -295,6 +295,38 @@ update sibes_menus_usuarios set export=true;
 alter table sibes_menus_usuarios add column estatus varchar(10);
 update public.sibes_menus_usuarios set estatus='ACTIVO';
 
+CREATE TABLE public.provincias
+(
+    idprovincia serial NOT NULL,
+    provincia character varying(25)
+)
+
+insert into provincias (provincia) values 
+	('Bolivar'),
+('Amazonas'),
+	('Anzoategui'),
+	('Apure'),
+	('Aragua'),
+	('Barinas'),	
+	('Carabobo'),
+	('Cojedes'),
+	('Delta Amacuro'),
+	('Distrito Capital'),
+	('Falcon'),
+	('Guarico'),
+	('Lara'),
+	('Merida'),
+	('Miranda'),
+	('Monagas'),
+	('Nueva Esparta'),
+	('Portuguesa'),
+	('Sucre'),
+	('Tachira'),
+	('Trujillo'),
+	('Vargas'),
+	('Yaracuy'),
+	('Zulia')
+
 CREATE OR REPLACE FUNCTION public.crear_pagos_mensuales()
     RETURNS trigger
     LANGUAGE 'plpgsql'

@@ -20,6 +20,7 @@
 - get('/generar/serie/:inicio/:fin/:interval/:formato', varController.generateSeries);
 - get('/niveleseducacion/all', varController.nivelesEducacionAll);
 - get('/gradosescolarizacion/all', varController.gradosEscolarizacionAll);
+- get('/provincias/', varController.provinciasAll);
 
 ### /sist_tthh/api/trabajadores
 - get('/consultar', trabajadoresController.trabajadoresAll); 
