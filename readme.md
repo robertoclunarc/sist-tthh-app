@@ -175,6 +175,21 @@
     "tasa_cambio" : "string",
 }
 ```
+### /sist_tthh/api/divisas
+- get('/consultar/:id/:fecha', precioDolarController.preciosDolarfilter);
+- get('/bcv', precioDolarController.dolarToDay);
+- put('/update/:IdReg', precioDolarController.updateRecord);
+- delete('/delete/:IdReg', precioDolarController.deleteRecord);
+- post('/insert', precioDolarController.createRecord);
+```
+{
+	"idpreciodolar": number,
+	"price": "string",
+	"last_update": "string",
+	"estatus": "string",
+	"title": "string",
+}
+```
 
 ### Informe de implementación de aplicación web en Docker
 
