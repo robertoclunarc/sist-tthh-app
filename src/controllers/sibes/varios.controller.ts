@@ -101,6 +101,7 @@ class VariosController{
         }
         
     }
+    
 }
 
 export const varController = new VariosController();

@@ -295,6 +295,20 @@ update sibes_menus_usuarios set export=true;
 alter table sibes_menus_usuarios add column estatus varchar(10);
 update public.sibes_menus_usuarios set estatus='ACTIVO';
 
+ALTER TABLE public.sibes_inscripciones
+ALTER COLUMN fecha_registro SET DEFAULT CURRENT_TIMESTAMP;
+
+create table precios_dolar (
+	idpreciodolar serial not null,
+	price varchar (15),
+	last_update varchar (25),
+	estatus varchar (25),
+	title varchar (25),
+	CONSTRAINT sibes_idpreciodolar_pkey PRIMARY KEY (idpreciodolar)
+)
+	ALTER TABLE precios_dolar
+ALTER COLUMN estatus SET DEFAULT 'ACTIVO';
+
 CREATE TABLE public.provincias
 (
     idprovincia serial NOT NULL,

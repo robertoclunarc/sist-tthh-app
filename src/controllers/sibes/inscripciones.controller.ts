@@ -307,7 +307,7 @@ class inscripcionController{
     public async updateRecord (req: Request, res: Response): Promise<void> {
         let newPost: any = req.body; 
         let IdReg: string = req.params.IdReg;
-        let query : string = "UPDATE sibes_inscripciones SET ";
+        let query : string = "UPDATE sibes_inscripciones SET fecha_modificacion=NOW(),";
         try {
             for (const prop in newPost) {
                 if (prop != 'idinscripcion')
