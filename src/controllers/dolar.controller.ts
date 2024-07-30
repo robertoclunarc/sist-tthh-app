@@ -8,10 +8,11 @@ class preciosDolarController{
     public async preciosDolarfilter (req: Request, res: Response): Promise<void> {
         let consulta = "SELECT * FROM precios_dolar ";
         const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
+        
         const regex = /^[0-9]*$/;        
         let filtro = {
             id: valueIsNull.indexOf(req.params.id)  != -1  ? null : req.params.id,
-            fecha: valueIsNull.indexOf(req.params.fecha)  != -1 ? null : req.params.fecha,                        
+            fecha: valueIsNull.indexOf(req.params.fecha)  != -1 ? null : decodeURIComponent(req.params.fecha) ,                        
         }
 
         let where: string[] = [];
@@ -47,7 +48,7 @@ class preciosDolarController{
         }else{
             consulta += " ORDER BY idpreciodolar desc";
         } 
-        
+        //console.log(consulta)
         try {            
             
             const precios_dolar: IPrecios_dolar[] = await db.querySelect(consulta);            

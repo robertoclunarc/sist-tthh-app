@@ -9,7 +9,7 @@ class FacturasController{
         let consulta = "SELECT f.* FROM sibes_facturas f ";
         const valueIsNull = [undefined, 'null', 'NULL', '', , 'undefined'];
         const regex = /^[0-9]*$/;
-        const IdReg: string = req.params.IdReg
+        
         let filtro = {
             idfactura: valueIsNull.indexOf(req.params.idfactura)  != -1  ? null : req.params.idfactura,
             nroFactura: valueIsNull.indexOf(req.params.nroFactura)  != -1 ? null : req.params.nroFactura,

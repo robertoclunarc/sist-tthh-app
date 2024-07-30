@@ -75,7 +75,7 @@ class inscripcionController{
         let consulta = "select t.*, b.* from trabajadores t inner join sibes_beneficiarios b on t.trabajador=b.trabajador inner join sibes_inscripciones i on i.fkbeneficiario=b.idbeneficiario";
         const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
         const regex = /^[0-9]*$/;
-        const IdReg: string = req.params.IdReg
+        
         let filtro = {
             trabajador: valueIsNull.indexOf(req.params.trabajador)  != -1  ? null : req.params.trabajador,
             nombreTrabajador: valueIsNull.indexOf(req.params.nombreTrabajador)  != -1 ? null : req.params.nombreTrabajador,

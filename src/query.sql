@@ -309,6 +309,25 @@ create table precios_dolar (
 	ALTER TABLE precios_dolar
 ALTER COLUMN estatus SET DEFAULT 'ACTIVO';
 
+CREATE OR REPLACE FUNCTION validate_last_update()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Verificar si ya existe un registro con el mismo valor de last_update
+  IF EXISTS (SELECT 1 FROM precios_dolar WHERE last_update = NEW.last_update) THEN
+    -- Si existe, no hacer nada (evitar la inserción)
+    RETURN NULL;
+  ELSE
+    -- Si no existe, proceder con la inserción
+    RETURN NEW;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER before_insert_precios_dolar
+BEFORE INSERT ON precios_dolar
+FOR EACH ROW
+EXECUTE FUNCTION validate_last_update();
+
 CREATE TABLE public.provincias
 (
     idprovincia serial NOT NULL,
