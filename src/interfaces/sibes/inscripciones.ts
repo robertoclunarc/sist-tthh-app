@@ -24,6 +24,6 @@ export interface Iinscripcion
 
 export interface ITrabajadoresConBenefInscritos{
     trabajador?: ITrabajadores,
-    beneficairio?: Ibeneficiario,
+    beneficiario?: Ibeneficiario,
     inscripciones?: { inscripcion?: Iinscripcion, colegio?: Icolegio}[],
 }

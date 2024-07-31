@@ -218,7 +218,7 @@ class inscripcionController{
                             apellidos: res.apellidos,
                             edo_civil: res.edo_civil,
                         },
-                        beneficairio:{
+                        beneficiario:{
                             idbeneficiario : res.idbeneficiario,
                             cedula : res.cedula,
                             trabajador : res.trabajador,
