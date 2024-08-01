@@ -24,7 +24,7 @@ class VariosController{
     
     public async nivelesEducacionAll (req: Request, res: Response): Promise<void> {        
         try {
-            const result: InivelesEducacion[] = await db.querySelect('SELECT * FROM sibes_niveles_educacion ');
+            const result: InivelesEducacion[] = await db.querySelect('SELECT * FROM sibes_niveles_educacion ORDER BY orden');
             
             if (!result){
                 res.status(400).json('Niveles no encontrado');
@@ -56,7 +56,7 @@ class VariosController{
 
     public async gradosEscolarizacionAll (req: Request, res: Response): Promise<void> {        
         try {
-            const result: IgradosEscolarizacion[] = await db.querySelect('SELECT * FROM sibes_grados_escolarizacion ');
+            const result: IgradosEscolarizacion[] = await db.querySelect('SELECT * FROM sibes_grados_escolarizacion ORDER BY orden ');
             
             if (!result){
                 res.status(400).json('Grados no encontrado');

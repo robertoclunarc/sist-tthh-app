@@ -6,7 +6,7 @@ class inscripcionController{
 
     public async inscripcionfilter (req: Request, res: Response): Promise<void> {
         let consulta = "SELECT * FROM sibes_inscripciones ";
-        const valueIsNull = [undefined, 'null', 'NULL', ''];
+        const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
         const regex = /^[0-9]*$/;        
         let filtro = {
             id: valueIsNull.indexOf(req.params.id)  != -1  ? null : req.params.id,
@@ -58,7 +58,7 @@ class inscripcionController{
         }else{
             consulta += " ORDER BY idinscripcion desc";
         } 
-        
+        console.log(consulta);
         try {            
             
             const inscripciones: Iinscripcion[] = await db.querySelect(consulta);            
@@ -75,13 +75,13 @@ class inscripcionController{
         let consulta = "select t.*, b.* from trabajadores t inner join sibes_beneficiarios b on t.trabajador=b.trabajador inner join sibes_inscripciones i on i.fkbeneficiario=b.idbeneficiario";
         const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
         const regex = /^[0-9]*$/;
-        
+        const estatus = ["ACTIVA", "INACTIVA"];
         let filtro = {
             trabajador: valueIsNull.indexOf(req.params.trabajador)  != -1  ? null : req.params.trabajador,
             nombreTrabajador: valueIsNull.indexOf(req.params.nombreTrabajador)  != -1 ? null : req.params.nombreTrabajador,
             cedula: valueIsNull.indexOf(req.params.cedula)  != -1 ? null : req.params.cedula,
             nombreBeneficiario: valueIsNull.indexOf(req.params.nombreBeneficiario)  != -1 ? null : req.params.nombreBeneficiario,
-            estatus: valueIsNull.indexOf(req.params.estatus)  != -1 ? null : req.params.estatus,
+            estatus: valueIsNull.indexOf(req.params.estatus)  != -1 ? null : req.params.estatus.toUpperCase(),
             anioEscolar: valueIsNull.indexOf(req.params.anioEscolar)  != -1 ? null : req.params.anioEscolar,
             condlogica: valueIsNull.indexOf(req.params.condlogica)  >= 0 ? 'OR' : req.params.condlogica,
         }        
@@ -110,35 +110,43 @@ class inscripcionController{
                 orderBy.push('b.nombre_beneficiario');
             }
 
-            if (filtro.estatus !=null && !regex.test(filtro.estatus) ){
-                where.push(` and  i.estatus_inscripcioin = '${filtro.estatus}'`);
+            if (filtro.estatus !=null && estatus.indexOf(filtro.estatus)!= -1 ){
+                where.push(` i.estatus_inscripcioin = '${filtro.estatus}'`);
             }
 
-            if (filtro.anioEscolar !==null && regex.test(filtro.anioEscolar)){
-                where.push( ` i.anio_escolar = ${filtro.anioEscolar}`);                
+            if (filtro.anioEscolar !==null && regex.test(filtro.anioEscolar) && filtro.anioEscolar.length===4){
+                if(Number(filtro.anioEscolar) >= 2023 && Number(filtro.anioEscolar) <= 2100)
+                    where.push( ` i.anio_escolar = ${filtro.anioEscolar}`);                
             }
             
             where.forEach(function(w, index) {
                 if (index==0){
-                     consulta += ` WHERE ${w}`;
+                     consulta += ` WHERE ${w} `;
                 }else{                    
-                    consulta += ` ${filtro.condlogica} ${w}`;
+                    consulta += ` ${filtro.condlogica} ${w} `;
                 }    
             }); 
         }
 
+        consulta += ' GROUP BY \
+            t.trabajador, t.registro_fiscal, t.nombre, t.sexo, t.fecha_nacimiento, t.domicilio, t.domicilio2, t.poblacion, t.estado_provincia, \
+            t.pais, t.codigo_postal, t.calles_aledanas, t.telefono_particular, t.reg_seguro_social, t.domicilio3, t.e_mail, t.fkunidad, \
+            t.tipo_documento, t.nombres, t.apellidos, t.edo_civil, \
+            b.idbeneficiario, b.trabajador, b.fecha_nac, b.sexo_beneficiario, b.pago_colegio, b.estatus_beneficio, b.nombre_beneficiario, \
+            b.cedula, b.grado_escolarizacion, b.nivel_educativo ';
+
         if (orderBy.length>0){
             orderBy.forEach(function(order, index) {
                 if (index==0){
-                    consulta += ` ORDER BY ${order}`; 
+                    consulta += ` ORDER BY ${order} `; 
                 }else{
-                    consulta += ` , ${order}`;
+                    consulta += ` , ${order} `;
                 }                
             });
         }else{
             consulta += " ORDER BY t.trabajador";
         }
-        console.log(consulta);
+        
         try {
             const trabajadoresResult = await db.querySelect(consulta);
             const idbeneficiarios = trabajadoresResult.map((benef: any) => benef.idbeneficiario);
@@ -147,13 +155,17 @@ class inscripcionController{
                 let _inscripciones = `
                 select i.*, c.* from sibes_inscripciones i inner join sibes_colegios c on i.fkcolegio=c.idcolegio
                 WHERE i.fkbeneficiario IN (${idbeneficiarios.join(', ')})`;
-
-                if (filtro.estatus !=null && !regex.test(filtro.estatus)){
+                
+                if (filtro.estatus !=null && estatus.indexOf(filtro.estatus)!= -1 ){
                     _inscripciones += ` and  i.estatus_inscripcioin = '${filtro.estatus}'`;                    
                 }
-
+                if (filtro.anioEscolar !==null && regex.test(filtro.anioEscolar) && filtro.anioEscolar.length===4){
+                    if(Number(filtro.anioEscolar) >= 2022 && Number(filtro.anioEscolar) <= 2100)
+                        _inscripciones += ` and i.anio_escolar = ${filtro.anioEscolar}`;                
+                }
+                
                 _inscripciones += ` order by i.fecha_inscripcion desc `;
-
+                
                 const inscripcionesResult = await db.querySelect(_inscripciones);
 
                 const incripcionesMap: { [key: number]: any[] } = {};
@@ -325,9 +337,8 @@ class inscripcionController{
         } catch (e) {
             console.error(e);
            res.status(500).json('Internal Server error');
-        }
-        
-    }
+        }        
+    }    
 
     public async deleteRecord (req: Request, res: Response): Promise<void> {        
         let IdReg: string = req.params.IdReg;

@@ -96,7 +96,7 @@
 } 
 ```
 ### /sist_tthh/api/beneficiarios
-- get('/consultar/:id/:nombre/:cedula/:trabajador/:sexo/:grado/:nivelEduc/:edadIni/:edadFin/:condlogica', beneficiariosController.beneficiariofilter);
+- get('/consultar/:id/:nombre/:nombrebeneficiario/:cedula/:trabajador/:sexo/:grado/:nivelEduc/:edadIni/:edadFin/:estatus/:condlogica', beneficiariosController.beneficiariofilter);
 - put('/update/:IdReg', beneficiariosController.updateRecord);
 - delete('/delete/:IdReg', beneficiariosController.deleteRecord);
 - post('/insert', beneficiariosController.createRecord)

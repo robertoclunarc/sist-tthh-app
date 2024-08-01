@@ -91,7 +91,7 @@ class BeneficiarioController{
         }else{
             consulta += " ORDER BY b.idbeneficiario desc";
         } 
-        
+        console.log(consulta);
         try {            
             
             const beneficiarios: IvBeneficiario[] = await db.querySelect(consulta);            

@@ -42,7 +42,7 @@ class MenusController{
             
         } catch (e) {
             console.log(e);
-           res.status(500).json('Internal Server error');
+            res.status(500).json('Internal Server error');
         }
         
     }
@@ -55,7 +55,7 @@ class MenusController{
         console.log(query);
         try {
             const result: IpermisoUsuario[] = await db.querySelect(query);
-            console.log(result)
+            
             if (!result){
                 res.status(200).json('no encontrado');
             }
