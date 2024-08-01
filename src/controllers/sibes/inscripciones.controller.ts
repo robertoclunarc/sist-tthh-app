@@ -101,17 +101,17 @@ class inscripcionController{
             }            
 
             if (filtro.nombreTrabajador !==null){
-                where.push( ` t.nombres like '%${filtro.nombreTrabajador}%' `);
+                where.push( ` t.nombres ilike '%${filtro.nombreTrabajador}%' `);
                 orderBy.push('t.nombres');
             }
 
             if (filtro.nombreBeneficiario !==null){
-                where.push( ` b.nombre_beneficiario like '%${filtro.nombreBeneficiario}%' `);
+                where.push( ` b.nombre_beneficiario ilike '%${filtro.nombreBeneficiario}%' `);
                 orderBy.push('b.nombre_beneficiario');
             }
 
-            if (filtro.estatus !=null){
-                where.push(` and  i.estatus_inscripcioin = '${filtro.estatus}`);                    
+            if (filtro.estatus !=null && !regex.test(filtro.estatus) ){
+                where.push(` and  i.estatus_inscripcioin = '${filtro.estatus}'`);
             }
 
             if (filtro.anioEscolar !==null && regex.test(filtro.anioEscolar)){
@@ -148,8 +148,8 @@ class inscripcionController{
                 select i.*, c.* from sibes_inscripciones i inner join sibes_colegios c on i.fkcolegio=c.idcolegio
                 WHERE i.fkbeneficiario IN (${idbeneficiarios.join(', ')})`;
 
-                if (filtro.estatus !=null){
-                    _inscripciones += ` and  i.estatus_inscripcioin = '${filtro.estatus}`;                    
+                if (filtro.estatus !=null && !regex.test(filtro.estatus)){
+                    _inscripciones += ` and  i.estatus_inscripcioin = '${filtro.estatus}'`;                    
                 }
 
                 _inscripciones += ` order by i.fecha_inscripcion desc `;
