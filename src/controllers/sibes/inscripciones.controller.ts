@@ -72,7 +72,7 @@ class inscripcionController{
     }
 
     public async trabajadoresConBeneficiariosInsc (req: Request, res: Response): Promise<void> {
-        let consulta = "select t.*, b.* from trabajadores t inner join sibes_beneficiarios b on t.trabajador=b.trabajador inner join sibes_inscripciones i on i.fkbeneficiario=b.idbeneficiario";
+        let consulta = "SELECT t.*, b.*, EXTRACT(YEAR FROM age(TO_DATE(EXTRACT(YEAR FROM CURRENT_DATE) || '-12-31', 'YYYY-MM-DD'), fecha_nac)) AS edad FROM trabajadores t INNER JOIN sibes_beneficiarios b ON t.trabajador=b.trabajador INNER JOIN sibes_inscripciones i ON i.fkbeneficiario=b.idbeneficiario";
         const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
         const regex = /^[0-9]*$/;
         const estatus = ["ACTIVA", "INACTIVA"];
@@ -84,7 +84,7 @@ class inscripcionController{
             estatus: valueIsNull.indexOf(req.params.estatus)  != -1 ? null : req.params.estatus.toUpperCase(),
             anioEscolar: valueIsNull.indexOf(req.params.anioEscolar)  != -1 ? null : req.params.anioEscolar,
             condlogica: valueIsNull.indexOf(req.params.condlogica)  >= 0 ? 'OR' : req.params.condlogica,
-        }        
+        }
 
         let where: string[] = [];
         let orderBy: string[] = [];
@@ -125,15 +125,16 @@ class inscripcionController{
                 }else{                    
                     consulta += ` ${filtro.condlogica} ${w} `;
                 }    
-            }); 
+            });
         }
 
-        consulta += ' GROUP BY \
+        consulta += " GROUP BY \
             t.trabajador, t.registro_fiscal, t.nombre, t.sexo, t.fecha_nacimiento, t.domicilio, t.domicilio2, t.poblacion, t.estado_provincia, \
             t.pais, t.codigo_postal, t.calles_aledanas, t.telefono_particular, t.reg_seguro_social, t.domicilio3, t.e_mail, t.fkunidad, \
             t.tipo_documento, t.nombres, t.apellidos, t.edo_civil, \
             b.idbeneficiario, b.trabajador, b.fecha_nac, b.sexo_beneficiario, b.pago_colegio, b.estatus_beneficio, b.nombre_beneficiario, \
-            b.cedula, b.grado_escolarizacion, b.nivel_educativo ';
+            b.cedula, b.grado_escolarizacion, b.nivel_educativo, \
+            EXTRACT(YEAR FROM age(TO_DATE(EXTRACT(YEAR FROM CURRENT_DATE) || '-12-31', 'YYYY-MM-DD'), fecha_nac))";
 
         if (orderBy.length>0){
             orderBy.forEach(function(order, index) {
@@ -228,7 +229,7 @@ class inscripcionController{
                             tipo_documento: res.tipo_documento,
                             nombres: res.nombres,
                             apellidos: res.apellidos,
-                            edo_civil: res.edo_civil,
+                            edo_civil: res.edo_civil,                            
                         },
                         beneficiario:{
                             idbeneficiario : res.idbeneficiario,
@@ -241,7 +242,7 @@ class inscripcionController{
                             nombre_beneficiario : res.nombre_beneficiario,                            
                             grado_escolarizacion : res.grado_escolarizacion,
                             nivel_educativo : res.nivel_educativo,
-                            
+                            edad: res.edad,
                         },
                         inscripciones: incripcionesMap[res.idbeneficiario] || []
                     };

@@ -1,7 +1,7 @@
 import { Request,  Response  } from 'express';
 import db from '../../database';
 //import {QueryResult} from 'pg';
-import { Ifactura, IdetallesFactura, IFacturaDetallada } from '../../interfaces/sibes/facturas';
+import { Ifactura, IdetallesFactura, IFacturaDetallada, IFacturaBebeficiario } from '../../interfaces/sibes/facturas';
 
 class FacturasController{   
 
@@ -147,7 +147,7 @@ class FacturasController{
         const regex = /^[0-9]*$/;        
         let filtro = {
             fkfactura: valueIsNull.indexOf(req.params.fkfactura)  != -1  ? null : req.params.fkfactura,
-            iddetfactura: valueIsNull.indexOf(req.params.iddetfactura)  != -1  ? null : req.params.iddetfactura,            
+            iddetfactura: valueIsNull.indexOf(req.params.iddetfactura)  != -1  ? null : req.params.iddetfactura,
         }
 
         let where: string[] = [];
@@ -270,7 +270,7 @@ class FacturasController{
             query =query.substring(0, query.length - 1);
             query += ') RETURNING *';
             //console.log(query);
-            const result: Ifactura[] = await db.querySelect(query);
+            const result: IFacturaBebeficiario[] = await db.querySelect(query);
             
             if (!result){
                 res.status(200).json('Factura_beneficiario no registrada');

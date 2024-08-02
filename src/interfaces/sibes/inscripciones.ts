@@ -1,5 +1,5 @@
 import { ITrabajadores } from "interfaces/trabajadores.interface";
-import { Ibeneficiario } from "./beneficiarios";
+import { IvBeneficiario } from "./beneficiarios";
 import { Icolegio } from "./colegios";
 
 export interface Iinscripcion
@@ -24,6 +24,6 @@ export interface Iinscripcion
 
 export interface ITrabajadoresConBenefInscritos{
     trabajador?: ITrabajadores,
-    beneficiario?: Ibeneficiario,
+    beneficiario?: IvBeneficiario,
     inscripciones?: { inscripcion?: Iinscripcion, colegio?: Icolegio}[],
 }
