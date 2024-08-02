@@ -756,10 +756,9 @@ CREATE TRIGGER sibes_detfacturas_trigger
 (36, 'matlux', true, true,true,true),
 (35, 'matlux', true, true,true,true)
 
--------------actualiza en casa
+
 alter table public.sibes_niveles_educacion
 add column orden integer;
 
 alter table public.sibes_grados_escolarizacion
 add column orden integer;
-------------------------------------------
