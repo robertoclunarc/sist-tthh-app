@@ -1,3 +1,7 @@
+import { ITrabajadores } from "interfaces/trabajadores.interface";
+import { Icolegio } from "./colegios";
+import { Ibeneficiario } from "./beneficiarios";
+
 export interface Ifactura
 {
     idfactura ?: number,
@@ -35,7 +39,9 @@ export interface IdetallesFactura
 export interface IFacturaDetallada
 {
     factura ?: Ifactura,
-    detalles ?: IdetallesFactura[],
+    colegio?: Icolegio,
+    trabajador?: ITrabajadores,
+    detalles ?: { item?: IdetallesFactura, beneficiario?: Ibeneficiario }[],
 }
 
 export interface IFacturaBebeficiario{

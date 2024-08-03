@@ -6,7 +6,10 @@ import { Ifactura, IdetallesFactura, IFacturaDetallada, IFacturaBebeficiario } f
 class FacturasController{   
 
     public async facturafilter (req: Request, res: Response): Promise<void> {
-        let consulta = "SELECT f.* FROM sibes_facturas f ";
+        let consulta = "SELECT f.*, c.*, t.* \
+        FROM sibes_facturas f \
+        INNER JOIN sibes_colegios c ON f.fkcolegio=c.idcolegio \
+        INNER JOIN trabajadores t ON f.trabajador=t.trabajador ";
         const valueIsNull = [undefined, 'null', 'NULL', '', , 'undefined'];
         const regex = /^[0-9]*$/;
         
@@ -93,10 +96,10 @@ class FacturasController{
             const idfacturas = facturasResult.map((factura: any) => factura.idfactura);
             let facturasDetalladas: IFacturaDetallada[] = [];
             if (idfacturas.length > 0) {
-                const detallesConsulta = `
-                SELECT d.* FROM sibes_detfacturas d
-                WHERE d.fkfactura IN (${idfacturas.join(', ')})`;
-
+                const detallesConsulta = `SELECT d.*, b.* FROM sibes_detfacturas d 
+                INNER JOIN sibes_beneficiarios b ON b.idbeneficiario=d.fkbeneficiario 
+                WHERE d.fkfactura IN (${idfacturas.join(', ')}) ORDER BY d.fkfactura, d.iddetfactura`;
+                console.log(detallesConsulta)
                 const detallesResult = await db.querySelect(detallesConsulta);
 
                 const detallesMap: { [key: number]: any[] } = {};
@@ -104,7 +107,32 @@ class FacturasController{
                     if (!detallesMap[detalle.fkfactura]) {
                         detallesMap[detalle.fkfactura] = [];
                     }
-                    detallesMap[detalle.fkfactura].push(detalle);
+                    detallesMap[detalle.fkfactura].push({
+                        item: {
+                            iddetfactura : detalle.iddetfactura,
+                            fkfactura : detalle.fkfactura,
+                            fkbeneficiario: detalle.fkbeneficiario,
+                            fkmensualidad : detalle.fkmensualidad,
+                            mes: detalle.mes,
+                            monto: detalle.monto,
+                            corresponde: detalle.corresponde,
+                            fecha_modificacion: detalle.fecha_modificacion,
+                            login_modificacion: detalle.login_registro,
+                            tasa_cambio: detalle.tasa_cambio,  
+                        },
+                        beneficiario: {
+                            idbeneficiario: detalle.idbeneficiario,
+                            cedula: detalle.cedula,
+                            trabajador: detalle.trabajador,
+                            fecha_nac: detalle.fecha_nac,
+                            sexo_beneficiario: detalle.sexo_beneficiario,   
+                            pago_colegio: detalle.pago_colegio,
+                            estatus_beneficio: detalle.estatus_beneficio,
+                            nombre_beneficiario: detalle.nombre_beneficiario,
+                            grado_escolarizacion: detalle.grado_escolarizacion,
+                            nivel_educativo: detalle.nivel_educativo,
+                        }
+                    });
                 });
 
                 facturasDetalladas = facturasResult.map((factura: any) => {
@@ -126,6 +154,39 @@ class FacturasController{
                             trabajador: factura.trabajador,
                             estatus: factura.estatus,
                             periodopago: factura.periodopago,
+                        },
+                        trabajador: {
+                            trabajador: factura.trabajador,
+                            registro_fiscal: factura.registro_fiscal,
+                            nombre: factura.nombre,
+                            sexo: factura.sexo,
+                            fecha_nacimiento: factura.fecha_nacimiento,
+                            domicilio: factura.domicilio,
+                            domicilio2: factura.domicilio2,
+                            poblacion: factura.poblacion,
+                            estado_provincia: factura.estado_provincia,
+                            pais: factura.pais,
+                            codigo_postal: factura.codigo_postal,
+                            calles_aledanas: factura.calles_aledanas,
+                            telefono_particular: factura.telefono_particular,
+                            reg_seguro_social: factura.reg_seguro_social,
+                            domicilio3: factura.domicilio3,
+                            e_mail: factura.e_mail,
+                            fkunidad: factura.fkunidad,
+                            tipo_documento: factura.tipo_documento,
+                            nombres: factura.nombres,
+                            apellidos: factura.apellidos,
+                            edo_civil: factura.edo_civil,
+                        },
+                        colegio: {
+                            idcolegio: factura.idcolegio,
+                            rif_colegio: factura.rif_colegio,
+                            nombre_colegio: factura.nombre_colegio,
+                            estatus_colegio: factura.estatus_colegio,
+                            direccion_colegio: factura.direccion_colegio,
+                            localidad_colegio: factura.localidad_colegio,
+                            provincia: factura.provincia,
+                            tipo_administracion: factura.tipo_administracion,
                         },
                         detalles: detallesMap[factura.idfactura] || []
                     };
