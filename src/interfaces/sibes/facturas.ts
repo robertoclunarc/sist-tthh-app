@@ -34,6 +34,9 @@ export interface IdetallesFactura
     fecha_modificacion ?: string,
     login_modificacion ?: string,
     tasa_cambio ?: string,
+    descripcion_detfactura ?: string,
+	cantidad ?: string,
+	precio_unitario ?: string,
 }
 
 export interface IFacturaDetallada

@@ -762,3 +762,10 @@ add column orden integer;
 
 alter table public.sibes_grados_escolarizacion
 add column orden integer;
+
+-----actulizar en casa----------------------------------
+alter table sibes_detfacturas
+	add column descripcion_detfactura varchar(500),
+	add column cantidad integer,
+	add column precio_unitario character varying(15);
+--------------------------------------------------------

@@ -118,7 +118,10 @@ class FacturasController{
                             corresponde: detalle.corresponde,
                             fecha_modificacion: detalle.fecha_modificacion,
                             login_modificacion: detalle.login_registro,
-                            tasa_cambio: detalle.tasa_cambio,  
+                            tasa_cambio: detalle.tasa_cambio,
+                            descripcion_detfactura: detalle.descripcion_detfactura,
+                            cantidad: detalle.cantidad,
+                            precio_unitario: detalle.precio_unitario,
                         },
                         beneficiario: {
                             idbeneficiario: detalle.idbeneficiario,
