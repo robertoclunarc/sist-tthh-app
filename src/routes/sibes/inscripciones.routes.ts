@@ -11,6 +11,7 @@ class InscripcionesRoutes {
     config(): void{
         
         this.router.get('/consultar/:id/:fkbeneficiario/:fkcolegio/:anio_escolar', inscripcionsController.inscripcionfilter);
+        this.router.get('/maxperiodo/:fkbeneficiario', inscripcionsController.maxPeriodoEscolar);
         this.router.get('/consultar/beneficiarios/trabajadores/:trabajador/:nombreTrabajador/:cedula/:nombreBeneficiario/:estatus/:anioEscolar/:condlogica', inscripcionsController.trabajadoresConBeneficiariosInsc);
         this.router.get('/consultar/totalinscripciones', inscripcionsController.totalInscripciones);
         this.router.put('/update/:IdReg', inscripcionsController.updateRecord);

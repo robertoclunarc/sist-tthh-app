@@ -768,4 +768,7 @@ alter table sibes_detfacturas
 	add column descripcion_detfactura varchar(500),
 	add column cantidad integer,
 	add column precio_unitario character varying(15);
+
+	ALTER TABLE public.sibes_inscripciones
+ALTER COLUMN fecha_registro SET DEFAULT CURRENT_TIMESTAMP;
 --------------------------------------------------------

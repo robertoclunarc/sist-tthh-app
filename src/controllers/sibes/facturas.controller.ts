@@ -356,7 +356,7 @@ class FacturasController{
     public async updateRecordFactura (req: Request, res: Response): Promise<void> {
         let newPost: any = req.body; 
         let IdReg: string = req.params.IdReg;
-        let query : string = "UPDATE sibes_facturas SET ";
+        let query : string = "UPDATE sibes_facturas SET fecha_modificacion=NOW(),";
         try {
             for (const prop in newPost) {
                 if (prop != 'idfactura')

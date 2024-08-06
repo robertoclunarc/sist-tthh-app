@@ -29,7 +29,7 @@ class inscripcionController{
             }
 
             if (filtro.fkcolegio !=null){
-                where.push( " fkcolegio like =" + filtro.fkcolegio + " ");
+                where.push( " fkcolegio  =" + filtro.fkcolegio + " ");
                 orderBy.push('fkcolegio')
             }
 
@@ -255,6 +255,19 @@ class inscripcionController{
             console.error(e);
             res.status(500).json('Internal Server error');
         }
+    }
+
+    public async maxPeriodoEscolar (req: Request, res: Response): Promise<void> {
+        let consulta = "SELECT * FROM sibes_inscripciones where anio_escolar=(select max(anio_escolar) from sibes_inscripciones where fkbeneficiario=$1) and fkbeneficiario=$1";
+        try {            
+            
+            const inscripciones: Iinscripcion[] = await db.querySelect(consulta, [req.params.fkbeneficiario]);            
+            res.status(200).json(inscripciones[0]);
+            
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({msj: 'Internal Server error', error: e, sql: consulta});
+        }        
     }
 
     public async totalInscripciones (req: Request, res: Response): Promise<void> {

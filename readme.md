@@ -115,6 +115,7 @@
 } 
 ```
 ### /sist_tthh/api/inscripciones
+- get('/maxperiodo/:fkbeneficiario', inscripcionsController.maxPeriodoEscolar);
 - get('/consultar/:id/:fkbeneficiario/:fkcolegio/:anio_escolar', inscripcionsController.inscripcionfilter);
 - get('/consultar/beneficiarios/trabajadores/:trabajador/:nombreTrabajador/:cedula/:nombreBeneficiario/:estatus/:anioEscolar/:condlogica', inscripcionsController.trabajadoresConBeneficiariosInsc);
 - get('/consultar/totalinscripciones', inscripcionsController.totalInscripciones);
