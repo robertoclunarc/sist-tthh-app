@@ -578,129 +578,6 @@ INSERT INTO sibes_mensualidades(
 END;
 $BODY$;
 
-CREATE OR REPLACE FUNCTION public.actualizar_pagos_mensuales()
-    RETURNS trigger
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE NOT LEAKPROOF
-AS $BODY$
-
-DECLARE
-vdeuda double precision;
-BEGIN
-	 
-if NEW.corresponde='MENSUALIDAD' then
-     
-     if new.mes=9 then
-        vdeuda=(new.mes*12)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET mes_09=new.monto, 
-	       mes_10=new.monto, mes_11=new.monto, mes_12=new.monto, mes_01=new.monto, mes_02=new.monto, mes_03=new.monto, mes_04=new.monto, 
-	       mes_05=new.monto, mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes09=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=10 then
-        vdeuda=(new.mes*11)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET  
-	       mes_10=new.monto, mes_11=new.monto, mes_12=new.monto, mes_01=new.monto, mes_02=new.monto, mes_03=new.monto, mes_04=new.monto, 
-	       mes_05=new.monto, mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes10=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=11 then
-        vdeuda=(new.mes*10)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET  
-	       mes_11=new.monto, mes_12=new.monto, mes_01=new.monto, mes_02=new.monto, mes_03=new.monto, mes_04=new.monto, 
-	       mes_05=new.monto, mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes11=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=12 then
-        vdeuda=(new.mes*9)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET  
-	       mes_12=new.monto, mes_01=new.monto, mes_02=new.monto, mes_03=new.monto, mes_04=new.monto, 
-	       mes_05=new.monto, mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes12=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=1 then
-        vdeuda=(new.mes*8)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET  
-	       mes_01=new.monto, mes_02=new.monto, mes_03=new.monto, mes_04=new.monto, 
-	       mes_05=new.monto, mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes01=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=2 then
-	vdeuda=(new.mes*7)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET  
-	       mes_02=new.monto, mes_03=new.monto, mes_04=new.monto, 
-	       mes_05=new.monto, mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes02=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=3 then
-	vdeuda=(new.mes*6)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET  
-	       mes_03=new.monto, mes_04=new.monto, 
-	       mes_05=new.monto, mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes03=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=4 then
-	vdeuda=(new.mes*5)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET	        
-	       mes_04=new.monto, mes_05=new.monto, mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes04=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=5 then
-	vdeuda=(new.mes*4)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET	        
-	       mes_05=new.monto, mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes05=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=6 then
-	vdeuda=(new.mes*3)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET	        
-	       mes_06=new.monto, mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes06=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     elsif new.mes=7 then
-	vdeuda=(new.mes*2)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET	        
-	       mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes07=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     else
-	vdeuda=0;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
-	UPDATE sibes_mensualidades
-	   SET	        
-	       mes_07=new.monto, mes_08=new.monto, deuda=vdeuda, pagado=pagado+new.monto, ultimo_mes_pagado=new.mes, 
-	       monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes08=new.tasa_cambio
-	 WHERE idmensualidad=new.fkmensualidad;
-     end if;
-     
-else
-	UPDATE sibes_mensualidades SET 
-	monto_inscripcion= new.monto, 
-	pago_prox ='MENSUALIDAD',
-	fecha_ult_pago=NOW(), 
-	ultimo_mes_pagado=0, 
-	deuda = deuda::numeric - new.monto::numeric,
-	pagado = pagado::numeric + new.monto::numeric,
-	tasa_cambio=new.tasa_cambio
-	WHERE idmensualidad= new.fkmensualidad;
-end if;
-
- RETURN NEW;
-END;
-$BODY$;
-
-
 CREATE TRIGGER sibes_inscripciones_trigger
     AFTER INSERT
     ON public.sibes_inscripciones
@@ -763,7 +640,6 @@ add column orden integer;
 alter table public.sibes_grados_escolarizacion
 add column orden integer;
 
------actulizar en casa----------------------------------
 alter table sibes_detfacturas
 	add column descripcion_detfactura varchar(500),
 	add column cantidad integer,
@@ -771,4 +647,123 @@ alter table sibes_detfacturas
 
 	ALTER TABLE public.sibes_inscripciones
 ALTER COLUMN fecha_registro SET DEFAULT CURRENT_TIMESTAMP;
---------------------------------------------------------
+
+--------------actualizar en matesi---------------
+-- FUNCTION: public.actualizar_pagos_mensuales()
+
+-- DROP FUNCTION IF EXISTS public.actualizar_pagos_mensuales();
+
+CREATE OR REPLACE FUNCTION public.actualizar_pagos_mensuales()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+
+DECLARE
+vdeuda double precision;
+BEGIN
+     
+if NEW.corresponde='MENSUALIDAD' then
+     
+     if new.mes=9 then
+        vdeuda=(new.mes*12)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET mes_09=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes09=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=10 then
+        vdeuda=(new.mes*11)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET  
+           mes_10=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes10=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=11 then
+        vdeuda=(new.mes*10)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET  
+           mes_11=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes11=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=12 then
+        vdeuda=(new.mes*9)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET  
+           mes_12=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes12=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=1 then
+        vdeuda=(new.mes*8)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET  
+           mes_01=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes,
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes01=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=2 then
+    vdeuda=(new.mes*7)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET  
+           mes_02=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes02=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=3 then
+    vdeuda=(new.mes*6)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET  
+           mes_03=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes03=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=4 then
+    vdeuda=(new.mes*5)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET          
+           mes_04=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes04=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=5 then
+    vdeuda=(new.mes*4)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET          
+           mes_05=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes05=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=6 then
+    vdeuda=(new.mes*3)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET          
+           mes_06=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes06=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     elsif new.mes=7 then
+    vdeuda=(new.mes*2)-new.mes;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET          
+           mes_07=new.monto, deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes07=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     else
+    vdeuda=0;--la deuda es igual a la cantidad de meses del año a pagar menos el mes que esta pagando
+    UPDATE sibes_mensualidades
+       SET          
+           deuda=vdeuda, pagado=(pagado::numeric+new.monto::numeric), ultimo_mes_pagado=new.mes, 
+           monto_ultimo_mes=new.monto, fecha_ult_pago=now(), pago_prox='MENSUALIDAD', tasacambio_mes08=new.tasa_cambio
+     WHERE idmensualidad=new.fkmensualidad;
+     end if;
+     
+else
+    UPDATE sibes_mensualidades SET 
+    monto_inscripcion= new.monto, 
+    pago_prox ='MENSUALIDAD',
+    fecha_ult_pago=NOW(), 
+    ultimo_mes_pagado=0, 
+    deuda = (deuda::numeric - new.monto::numeric),
+    pagado = (pagado::numeric + new.monto::numeric),
+    tasa_cambio=new.tasa_cambio
+    WHERE idmensualidad= new.fkmensualidad;
+end if;
+
+ RETURN NEW;
+END;
+$BODY$;
+

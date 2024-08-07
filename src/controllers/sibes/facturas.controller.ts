@@ -206,8 +206,7 @@ class FacturasController{
     
     public async detFacturaFilter (req: Request, res: Response): Promise<void> {
         let consulta = "SELECT * FROM sibes_detfacturas ";
-        const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
-        
+        const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];        
         const regex = /^[0-9]*$/;        
         let filtro = {
             fkfactura: valueIsNull.indexOf(req.params.fkfactura)  != -1  ? null : req.params.fkfactura,

@@ -22,8 +22,8 @@ class MensualidadController{
             }
 
             if (filtro.fkinscripcion !=null){
-                where.push( " fkbeneficiario = " + filtro.fkinscripcion + " ");
-                orderBy.push('fkbeneficiario')
+                where.push( " fkinscripcion = " + filtro.fkinscripcion + " ");
+                orderBy.push('fkinscripcion')
             }
 
             where.forEach(function(where, index) {
