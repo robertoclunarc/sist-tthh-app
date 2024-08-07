@@ -258,7 +258,7 @@ class inscripcionController{
     }
 
     public async maxPeriodoEscolar (req: Request, res: Response): Promise<void> {
-        let consulta = "SELECT * FROM sibes_inscripciones where anio_escolar=(select max(anio_escolar) from sibes_inscripciones where fkbeneficiario=$1) and fkbeneficiario=$1";
+        let consulta = "SELECT * FROM sibes_inscripciones where anio_escolar=(select max(anio_escolar) from sibes_inscripciones where fkbeneficiario=$1) and fkbeneficiario=$1 and estatus_inscripcioin='ACTIVA'";
         try {            
             
             const inscripciones: Iinscripcion[] = await db.querySelect(consulta, [req.params.fkbeneficiario]);            
