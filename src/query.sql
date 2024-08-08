@@ -648,7 +648,7 @@ alter table sibes_detfacturas
 	ALTER TABLE public.sibes_inscripciones
 ALTER COLUMN fecha_registro SET DEFAULT CURRENT_TIMESTAMP;
 
---------acutalizar en casa
+
 CREATE OR REPLACE FUNCTION public.actualizar_pagos_mensuales()
     RETURNS trigger
     LANGUAGE 'plpgsql'
@@ -764,16 +764,16 @@ END;
 $BODY$;
 
 
-alter table sibes_mensualidad 
-    add column pagado_mes09 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes10 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes11 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes12 character varying(15) SET DEFAULT '0.0',
-	add column pagado_mes01 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes02 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes03 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes04 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes05 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes06 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes07 character varying(15) SET DEFAULT '0.0',
-    add column pagado_mes08 character varying(15) SET DEFAULT '0.0';
+alter table sibes_mensualidades
+    add column pagado_mes09 character varying(15) DEFAULT '0.0',
+    add column pagado_mes10 character varying(15) DEFAULT '0.0',
+    add column pagado_mes11 character varying(15) DEFAULT '0.0',
+    add column pagado_mes12 character varying(15) DEFAULT '0.0',
+	add column pagado_mes01 character varying(15) DEFAULT '0.0',
+    add column pagado_mes02 character varying(15) DEFAULT '0.0',
+    add column pagado_mes03 character varying(15) DEFAULT '0.0',
+    add column pagado_mes04 character varying(15) DEFAULT '0.0',
+    add column pagado_mes05 character varying(15) DEFAULT '0.0',
+    add column pagado_mes06 character varying(15) DEFAULT '0.0',
+    add column pagado_mes07 character varying(15) DEFAULT '0.0',
+    add column pagado_mes08 character varying(15) DEFAULT '0.0';

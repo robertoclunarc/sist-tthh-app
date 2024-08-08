@@ -12,7 +12,7 @@ class FacturasController{
         INNER JOIN trabajadores t ON f.trabajador=t.trabajador ";
         const valueIsNull = [undefined, 'null', 'NULL', '', , 'undefined'];
         const regex = /^[0-9]*$/;
-        
+        const estatus = ["PENDIENTE", "PAGADA", "ANULADA"];
         let filtro = {
             idfactura: valueIsNull.indexOf(req.params.idfactura)  != -1  ? null : req.params.idfactura,
             nroFactura: valueIsNull.indexOf(req.params.nroFactura)  != -1 ? null : req.params.nroFactura,
@@ -22,7 +22,7 @@ class FacturasController{
             trabajador: valueIsNull.indexOf(req.params.trabajador)  != -1 ? null : req.params.trabajador,            
             fechaEntregaIni: valueIsNull.indexOf(req.params.fechaEntregaIni)  != -1 ? null : req.params.fechaEntregaIni,
             fechaEntregaFin: valueIsNull.indexOf(req.params.fechaEntregaFin)  != -1 ? null : req.params.fechaEntregaFin,
-            estatus: valueIsNull.indexOf(req.params.estatus)  != -1 ? null : req.params.estatus,
+            estatus: valueIsNull.indexOf(req.params.estatus)  != -1 ? null : req.params.estatus.toUpperCase(),
             periodo: valueIsNull.indexOf(req.params.periodo)  != -1 ? null : req.params.periodo,
             condlogica: valueIsNull.indexOf(req.params.condlogica)  >= 0 ? 'OR' : req.params.condlogica,
         }        
@@ -60,14 +60,15 @@ class FacturasController{
                 orderBy.push('f.fecha_entrega_rrhh desc');
             }
 
-            if (filtro.estatus !==null){
-                where.push( ` f.estatus like '%${filtro.estatus}%' `);
+            if (filtro.estatus !=null && estatus.indexOf(filtro.estatus)!= -1 ){
+                where.push( ` f.estatus = '${filtro.estatus}' `);
                 orderBy.push('f.estatus');
+                orderBy.push('f.fecha_entrega_rrhh');
             }
 
-            if (filtro.periodo !==null){
-                where.push( ` f.periodopago like '%${filtro.periodo}%' `);
-                orderBy.push('f.periodopago');
+            if (filtro.periodo !==null && regex.test(filtro.periodo) && filtro.periodo.length===4){
+                if(Number(filtro.periodo) >= 2023 && Number(filtro.periodo) <= 2100)
+                    where.push( ` f.periodopago = ${filtro.periodo}`);                
             }
             
             where.forEach(function(w, index) {
@@ -450,7 +451,7 @@ class FacturasController{
             query += ' WHERE idfactura = ' + IdReg;
               
             const result = await db.querySelect(query);            
-            res.status(200).json('Factura actualizada');            
+            res.status(200).json('Detalle de Factura Actualizada');            
             
         } catch (e) {
             console.log(e);
