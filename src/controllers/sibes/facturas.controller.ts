@@ -10,7 +10,7 @@ class FacturasController{
         FROM sibes_facturas f \
         INNER JOIN sibes_colegios c ON f.fkcolegio=c.idcolegio \
         INNER JOIN trabajadores t ON f.trabajador=t.trabajador ";
-        const valueIsNull = [undefined, 'null', 'NULL', '', , 'undefined'];
+        const valueIsNull = [undefined, 'null', 'NULL', '', 'undefined'];
         const regex = /^[0-9]*$/;
         const estatus = ["PENDIENTE", "PAGADA", "ANULADA"];
         let filtro = {
@@ -19,36 +19,48 @@ class FacturasController{
             fechaFacturaIni: valueIsNull.indexOf(req.params.fechaFacturaIni)  != -1 ? null : req.params.fechaFacturaIni,
             fechaFacturaFin: valueIsNull.indexOf(req.params.fechaFacturaFin)  != -1 ? null : req.params.fechaFacturaFin,
             idColegio: valueIsNull.indexOf(req.params.idColegio)  != -1 ? null : req.params.idColegio,
-            trabajador: valueIsNull.indexOf(req.params.trabajador)  != -1 ? null : req.params.trabajador,            
+            nombreColegio: valueIsNull.indexOf(req.params.nombreColegio)  != -1 ? null : req.params.nombreColegio,
+            trabajador: valueIsNull.indexOf(req.params.trabajador)  != -1 ? null : req.params.trabajador,
+            nombreTrabajador: valueIsNull.indexOf(req.params.nombreTrabajador)  != -1 ? null : req.params.nombreTrabajador,
             fechaEntregaIni: valueIsNull.indexOf(req.params.fechaEntregaIni)  != -1 ? null : req.params.fechaEntregaIni,
             fechaEntregaFin: valueIsNull.indexOf(req.params.fechaEntregaFin)  != -1 ? null : req.params.fechaEntregaFin,
             estatus: valueIsNull.indexOf(req.params.estatus)  != -1 ? null : req.params.estatus.toUpperCase(),
             periodo: valueIsNull.indexOf(req.params.periodo)  != -1 ? null : req.params.periodo,
-            condlogica: valueIsNull.indexOf(req.params.condlogica)  >= 0 ? 'OR' : req.params.condlogica,
-        }        
+            condlogica: valueIsNull.indexOf(req.params.condlogica) != -1 ? 'OR' : req.params.condlogica,
+        }
 
         let where: string[] = [];
         let orderBy: string[] = [];
-        if (filtro.idfactura !==null || filtro.nroFactura!==null || filtro.fechaFacturaIni!==null || filtro.fechaFacturaFin!==null || filtro.idColegio!==null || filtro.trabajador!==null || filtro.fechaEntregaIni!==null || filtro.fechaEntregaFin!==null || filtro.estatus != null  || filtro.periodo != null){
-            if (filtro.idfactura !==null){
+        if (filtro.idfactura !==null || filtro.nroFactura!==null || filtro.fechaFacturaIni!==null || filtro.fechaFacturaFin!==null || filtro.idColegio!==null || filtro.trabajador!==null || filtro.fechaEntregaIni!==null || filtro.fechaEntregaFin!==null || filtro.estatus != null  || filtro.periodo != null || filtro.nombreColegio !=null || filtro.nombreTrabajador != null){
+            if (filtro.idfactura !==null && regex.test(filtro.idfactura)){
                 where.push( ` f.idfactura=${filtro.idfactura}`);
                 orderBy.push('f.idfactura');
             }
 
             if (filtro.nroFactura !==null){
-                where.push( ` f.nro_factura like '%${filtro.nroFactura}%' `);
+                where.push( ` f.nro_factura ILIKE '%${filtro.nroFactura}%' `);
                 orderBy.push('f.nro_factura');
             }
 
-            if (filtro.trabajador !==null &&  regex.test(filtro.trabajador)){
+            if (filtro.trabajador !==null && regex.test(filtro.trabajador)){
                 where.push( ` f.trabajador like '%${filtro.trabajador}%' `);
                 orderBy.push('f.trabajador');
-            }            
+            }
 
-            if (filtro.idColegio !==null){
+            if (filtro.nombreTrabajador !==null){
+                where.push( ` t.nombres ILIKE '%${filtro.nombreTrabajador}%' `);
+                orderBy.push('t.nombres');
+            }
+
+            if (filtro.idColegio !==null && regex.test(filtro.idColegio)){
                 where.push( ` f.fkcolegio=${filtro.idColegio}`);
                 orderBy.push('f.fkcolegio');
-            }            
+            }
+
+            if (filtro.nombreColegio !==null){
+                where.push( ` c.nombre_colegio ILIKE '%${filtro.nombreColegio}%' `);
+                orderBy.push('c.nombre_colegio');
+            }
 
             if (filtro.fechaFacturaIni !==null && filtro.fechaFacturaFin!=null){
                 where.push( ` (to_char(f.fecha_factura,'YYYY-MM-DD') BETWEEN '${filtro.fechaFacturaIni}' AND '${filtro.fechaFacturaFin}') `);
@@ -68,7 +80,7 @@ class FacturasController{
 
             if (filtro.periodo !==null && regex.test(filtro.periodo) && filtro.periodo.length===4){
                 if(Number(filtro.periodo) >= 2023 && Number(filtro.periodo) <= 2100)
-                    where.push( ` f.periodopago = ${filtro.periodo}`);                
+                    where.push( ` f.periodopago = '${filtro.periodo}'`);
             }
             
             where.forEach(function(w, index) {
@@ -406,20 +418,27 @@ class FacturasController{
             query+= " ) VALUES ("; 
 
             for (const prop in newPost) {
-                if (prop != 'idfactura')
-                    if (typeof newPost[prop] === 'string')
-                        query+= `'${newPost[prop]}',`;
-                    else
-                        query+= `${newPost[prop]},`;               
+                if (prop != 'idfactura'){
+                    if (typeof newPost[prop] === 'string'){
+                        if (prop === 'fecha_modificacion'){
+                            query+= `NOW(),`;
+                        }else{
+                            query+= `'${newPost[prop]}',`;
+                        }
+                    }
+                    else{
+                        query+= `${newPost[prop]},`;
+                    }
+                }
             }
 
             query =query.substring(0, query.length - 1);
             query += ') RETURNING *';
-            console.log(query);
+            
             const result: Ifactura[] = await db.querySelect(query);
             
             if (!result){
-                res.status(200).json('Factura no registrada');
+                res.status(200).json('Detalle Factura no registrada');
                 //res.status(200).json(query);
             }
             else{
@@ -462,16 +481,28 @@ class FacturasController{
 
     public async deleteRecordDetFactura (req: Request, res: Response): Promise<void> {        
         let IdReg: string = req.params.IdReg;
-        let query : string = "DELETE from sibes_detfacturas WHERE idfactura = $1 ";
+        let query : string = "DELETE from sibes_detfacturas WHERE iddetfactura = $1 ";
         try {                          
-                const result = await db.querySelect(query, [IdReg]);
-                res.status(200).json('factura eliminada');
+            const result = await db.querySelect(query, [IdReg]);
+            res.status(200).json('factura eliminada');
             
         } catch (e) {
-            console.log(e);
+           console.log(e);
            res.status(500).json('Internal Server error');
-        }
-        
+        }        
+    }
+
+    public async deleteDetIDFactura (req: Request, res: Response): Promise<void> {        
+        let IdReg: string = req.params.IdReg;
+        let query : string = "DELETE from sibes_detfacturas WHERE fkfactura = $1 ";
+        try {                          
+            const result = await db.querySelect(query, [IdReg]);
+            res.status(200).json('detalle(s) de factura eliminada(s)');
+            
+        } catch (e) {
+           console.log(e);
+           res.status(500).json('Internal Server error');
+        }        
     }
 }
 

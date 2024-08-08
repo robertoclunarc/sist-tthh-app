@@ -29,11 +29,12 @@
 
 ### /sist_tthh/api/facturas
 - get('/consultar/detalle/:iddetfactura/:fkfactura', facturaController.detFacturaFilter);         
-- get('/filtrar/:idfactura/:nroFactura/:fechaFacturaIni/:fechaFacturaFin/:idColegio/:trabajador/:fechaEntregaIni/:fechaEntregaFin/:estatus/:periodo/:condlogica', facturaController.facturafilter);        
+- get('/filtrar/:idfactura/:nroFactura/:fechaFacturaIni/:fechaFacturaFin/:idColegio/:nombreColegio/:trabajador/:nombreTrabajador/:fechaEntregaIni/:fechaEntregaFin/:estatus/:periodo/:condlogica', facturaController.facturafilter);
 - put('/update/:IdReg', facturaController.updateRecordFactura); 
 - put('/update/detalle/:IdReg', facturaController.updateRecordDetFactura);        
 - delete('/delete/:IdReg', facturaController.deleteRecordFactura);
 - delete('/delete/detalle/:IdReg', facturaController.deleteRecordDetFactura);
+- delete('/delete/detalles/all/:IdReg', facturaController.deleteDetIDFactura);
 - post('/insert', facturaController.createRecordFactura)
 ```
 {
